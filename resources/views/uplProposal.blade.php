@@ -62,6 +62,22 @@
 											<td> 20 Februari 2020 </td>
 											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
 										</tr>
+										<tr>
+											<td>2</td>
+											<td><a class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
+											<td> Proposal Revisi 1 </td>
+											<td> Perbaikan  Latar Belakang</td>
+											<td> 22 Februari 2020 </td>
+											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td><a class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
+											<td> Proposal Revisi 2 </td>
+											<td> Perbaikan SWOT Analisis </td>
+											<td> 25 Februari 2020 </td>
+											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
+										</tr>
 														
 									  </tbody>
 									</table>

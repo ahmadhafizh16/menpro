@@ -83,6 +83,7 @@
 					</div>
 					<!-- /.modal-dialog -->
 					</div>
+					
 			</div>
 			
 			<!-- /.box-body -->

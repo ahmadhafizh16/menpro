@@ -28,6 +28,10 @@ class HomeController extends Controller
         if(Auth::user()->name == "mhs") return redirect("/regis");
         return view('home');
     }
+    
+    public function landingPage(){
+        return view('landingPage');
+    }
 
     public function jurusan()
     {
@@ -49,20 +53,49 @@ class HomeController extends Controller
         return view('uplProposal');
     }
 
+    public function uplBanner()
+    {
+        return view('uplBanner');
+    }
+
+    public function dataKelompok()
+    {
+        return view('dataKelompok');
+    }
+
+    public function dataProposal()
+    {
+        return view('dataProposal');
+    }
+    
+    public function createPengumuman()
+    {
+        return view('createPengumuman');
+    } 
+
     public function regisMhs()
     {
         return view('regismahasiswa');
     }
 
-    public function dataGen($dataN = 0,$var = ""){
+    public function dataGen($dataN = 0,$var = "",$action = "add,view,del"){
         $faker = \Faker\Factory::create();
         $exVar = explode(",",$var);
+        $exAct = explode(",",$action);
         $data = [];
+        $cust1 = ["Kelompok A Informatika","[IF20201A] Informatika A","Informatika","Aplikasi Booking Parkir Berbasis Web","[120011591] Dr. Zane Stroman"];
+        $cust2 = ["Kelompok A Informatika","[IF20201A] Informatika A","Aplikasi Booking Parkir Berbasis Web","Informatika","Pengumpulan Revisi Latar Belakang"];
 
         for($i = 0;$i < 100;$i++){   
             for($j = 0;$j < $dataN;$j++){
                 if($var == ""){
                     $data[$i]["idx$j"] = $faker->name;
+                }
+                elseif($var == "cust1"){
+                    $data[$i]["idx$j"] = $cust1[$j];
+                }
+                elseif($var == "cust2"){
+                    $data[$i]["idx$j"] = $cust2[$j];
                 }
                 else{
                     if($exVar[$j] == "number"){
@@ -74,8 +107,19 @@ class HomeController extends Controller
                     elseif($exVar[$j] == "name"){
                         $dat = $faker->name;
                     }
-                    elseif($exVar[$j] == "word"){
-                        $dat = $faker->sentence(3);
+                    elseif($exVar[$j] == "date"){
+                        $dat = date("Y-m-d");
+                    }
+                    elseif($exVar[$j] == "by"){
+                        $dat = "[120011591] Dr. Zane Stroman";
+                    }
+                    elseif(strpos($exVar[$j],"word") !== false){
+                        $exV = explode(":",$exVar[$j]);
+                        if(isset($exV[1])){
+                            $dat = $faker->sentence($exV[1]);
+                        }else{
+                            $dat = $faker->sentence(3);
+                        }
                     }
                     elseif($exVar[$j] == "semester"){
                         $arr = ["2018/1","2018/2","2019/1","2019/2","2020/1","2020/2"];
@@ -89,10 +133,28 @@ class HomeController extends Controller
                     }
                     $data[$i]["idx$j"] = $dat;
                 }
-                $data[$i]["action"] = '
-                <a onclick="" class="edit btn btn-success btn-sm" data-toggle="tooltip" title="Add"><i class="fa fa-plus"></i> Add</a>
-                <a onclick="" class="edit btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                <a onclick="" class="edit btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>';
+                $data[$i]["action"] = '';
+                if(in_array("add",$exAct)){
+                    $data[$i]["action"] .= '<a onclick="" class="edit btn btn-success btn-sm" data-toggle="tooltip" title="Add"><i class="fa fa-plus"></i> Add</a>';
+                }
+
+                if(in_array("edit",$exAct)){
+                    $data[$i]["action"] .= '<a onclick="" class="edit btn btn-warning btn-sm" data-toggle="tooltip" title="Add"><i class="fa fa-edit"></i> Edit</a>';
+                }
+
+                if(in_array("view",$exAct)){
+                    $data[$i]["action"] .= '<a class="edit btn btn-primary btn-sm" onclick="viewModal()"><i class="fa fa-eye"></i> View</a>';
+                }
+
+                if(in_array("delete",$exAct)){
+                    $data[$i]["action"] .= '<a onclick="" class="edit btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>';
+                }
+
+                if(in_array("download",$exAct)){
+                    $data[$i]["action"] .= '<a onclick="" class="edit btn btn-primary btn-sm"><i class="fa fa-download"></i> Download File</a>';
+                }
+                
+                
             }   
         }
 

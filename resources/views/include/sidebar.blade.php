@@ -37,6 +37,11 @@
         <li><a href="{{ route("regis") }}"><i class="fa fa-users"></i> <span>Kelompok</span></a></li>
         <li><a href="{{ route("uplProposal") }}"><i class="fa fa-file"></i> <span>Upload Proposal</span></a></li>
         <li><a href="{{ route("regis") }}"><i class="fa fa-image"></i> <span>Upload Banner</span></a></li>
+        @elseif(Auth::user()->name == "dosen")
+        <li><a href="{{ route("dashboard") }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+        <li><a href="{{ route("dataKelompok") }}"><i class="fa fa-users"></i> <span>Data Kelompok & Kelas</span></a></li>
+        <li><a href="{{ route("dataProposal") }}"><i class="fa fa-file"></i> <span>Proposal Masuk</span></a></li>
+        <li><a href="{{ route("createPengumuman") }}"><i class="fa fa-bullhorn"></i> <span>Buat Pengumuman</span></a></li>
         @else
         <li><a href="{{ route("dashboard") }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         <li><a href="{{ route("manage_jurusan") }}"><i class="fa fa-building"></i> <span>Setting Jurusan</span></a></li>
