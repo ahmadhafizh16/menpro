@@ -45,7 +45,7 @@ class HomeController extends Controller
 
     public function tahunAjaran()
     {
-        return view('tahunAjaran');
+        return view('tahunajaran');
     }
 
     public function uplProposal()
