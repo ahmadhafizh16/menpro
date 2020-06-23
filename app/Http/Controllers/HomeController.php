@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use DataTables;
+use DB;
 use Auth;
+use DataTables;
+use App\Kelompok;
+use App\Proposal;
+use App\TahunAjaran as TA;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -15,7 +19,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth.admin');
     }
 
     /**
@@ -25,7 +29,7 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        if(Auth::user()->name == "mhs") return redirect("/regis");
+        if(Auth::guard("web")->check()) return redirect("/regis");
         return view('home');
     }
     
@@ -40,7 +44,8 @@ class HomeController extends Controller
     
     public function setKelas()
     {
-        return view('kelas');
+        $ta = TA::where("isActive",1)->first();
+        return view('kelas',compact("ta"));
     }
 
     public function tahunAjaran()
@@ -50,7 +55,17 @@ class HomeController extends Controller
 
     public function uplProposal()
     {
-        return view('uplProposal');
+        $mhs =auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+
+        $isAda = $dtKel->exists();
+        
+        if($isAda){
+            $dtKel = $dtKel->first();
+            $kelompok = Kelompok::find($dtKel->id_kelompok);
+            // dd($kelompok->mhs()->get());
+        }
+        return view('uplProposal',compact("isAda","kelompok"));
     }
 
     public function uplBanner()
@@ -74,8 +89,87 @@ class HomeController extends Controller
     } 
 
     public function regisMhs()
+    {   $mhs =auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+
+        $isAda = $dtKel->exists();
+        
+        if($isAda){
+            $dtKel = $dtKel->first();
+            $kelompok = Kelompok::find($dtKel->id_kelompok);
+            // dd($kelompok->mhs()->get());
+        }
+        
+        return view('regismahasiswa',compact("isAda","kelompok"));
+    }
+
+    public function addKelompok(Request $req)
     {
-        return view('regismahasiswa');
+        $validatedData = $req->validate([
+            'dosen' => 'required',
+            'nama_kel' => 'required',
+            'kel' => 'required',
+            'kelas' => 'required',
+        ]);
+        // dd($req->all());
+        // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
+        //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
+        // }
+
+        $inp = new Kelompok();
+        $inp->id_dosbing = $req->dosen;
+        $inp->id_kelas = $req->kelas;
+        $inp->nama_kel = $req->nama_kel;
+        $inp->save();
+
+        $inp->mhs()->attach($req->kel);
+
+        return $this->setResponse($inp);
+    }
+
+    public function addProposal(Request $req)
+    {
+        $validatedData = $req->validate([
+            'judul' => 'required',
+            'topik' => 'required',
+            'bidang' => 'required',
+        ]);
+        // dd($req->all());
+        // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
+        //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
+        // }
+        $mhs =auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs)->first();
+        $kelompok = Kelompok::find($dtKel->id_kelompok);
+
+        $inp = new Proposal();
+        $inp->judul = $req->judul;
+        $inp->topik = $req->topik;
+        $inp->bidang = $req->bidang;
+        $inp->save();
+
+        $kelompok->id_proposal = $inp->id;
+        $kelompok->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function editProposal(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'judul' => 'required',
+            'topik' => 'required',
+            'bidang' => 'required',
+        ]);
+
+        $inp = Proposal::find($req->id);
+        $inp->judul = $req->judul;
+        $inp->topik = $req->topik;
+        $inp->bidang = $req->bidang;
+        $inp->save();
+
+        return $this->setResponse($inp);
     }
 
     public function dataGen($dataN = 0,$var = "",$action = "add,view,del"){

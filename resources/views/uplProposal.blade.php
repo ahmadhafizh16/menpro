@@ -15,28 +15,37 @@
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-12">
-						<button class="btn btn-success" @click=";$('#modal-default').modal('show')"><i class="fa fa-plus"></i> Upload Data Proposal</button>
+						@if(empty($kelompok->id_proposal))
+						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Upload Data Proposal</button>
+						@else
+						<button class="btn btn-info" @click="editData({{ $kelompok->id_proposal }})"><i class="fa fa-plus"></i> Edit Data Proposal</button>
+						@endif
 							<h3>  </h3>
 							<div v-if="tableLoading" class="fa-5x text-center">
 									<i class="fa fa-spinner fa-spin"></i>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<table class="table " style="font-size:16px;">
+									@if(empty($kelompok->id_proposal))
+									<h2 class="text-center"> Belum input data proposal</h2>
+									</hr>
+									@else
+									<table class="table " style="font-size:16px;width:50%">
 										<tbody>
 										<tr>
 											<td><b>Judul</b></td>
-											<td>: Aplikasi Parkir Berbasis Web</td>
+											<td>: {{ $kelompok->proposal->judul }}</td>
 										</tr>
 										<tr>
 											<td><b>Topik</b></td>
-											<td>: Topik Proposal</td>
+											<td>: {{ $kelompok->proposal->topik }}</td>
 										</tr>
 										<tr>
 											<td><b>Bidang</b></td>
-											<td>: Informatika</td>
+											<td>: {{ $kelompok->proposal->bidang }}</td>
 										</tr>				
 									  </tbody>
+									@endif
 									</table>
 								</div>
 							</div>
@@ -96,46 +105,42 @@
 							<h4 class="modal-title">Upload Data Proposal</h4>
 						</div>
 						<div class="modal-body">
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
+							<div :class="Boolean(errors.judul)? 'form-group has-error' : 'form-group'">
 								<label for="exampleInputEmail1">Judul</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Judul">
-								<span v-if="Boolean(errors.domain)"class="help-block">
+								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="judul" placeholder="Judul">
+								<span v-if="Boolean(errors.judul)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.judul">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
 
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail2">Topik</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail2" v-model="domain" placeholder="Topik">
-								<span v-if="Boolean(errors.domain)"class="help-block">
+							<div :class="Boolean(errors.topik)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Topik</label>
+								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="topik" placeholder="Topik">
+								<span v-if="Boolean(errors.topik)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.topik">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
 
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail2">Bidang</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail2" v-model="domain" placeholder="Bidang">
-								<span v-if="Boolean(errors.domain)"class="help-block">
+							<div :class="Boolean(errors.bidang)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Bidang</label>
+								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="bidang" placeholder="Bidang">
+								<span v-if="Boolean(errors.bidang)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.bidang">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
 
-							<div v-if="Boolean(errors.error)" class="alert alert-danger">
-								<h4><i class="icon fa fa-danger"></i> Error !</h4>
-								<ul>
-									<li v-for="(item,index) in errors.error">@{{ item }}</li>
-								</ul>
-							</div>
+							
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button v-if="mdTr == 'add'" type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button v-if="mdTr == 'edit'" type="button" class="btn btn-primary" @click="editHandler">Simpan</button>
 						</div>
 						</div>
 						<!-- /.modal-content -->
@@ -160,30 +165,68 @@
 @section('script')
 
 <script>
-function reloadTable(id){
-	app.reloadTable(id);
+
+function deleteDt(id){
+	app.deleteHandler(id);
 }
 
+function editDt(id){
+	app.editData(id);
+}
+
+
+	  
 var app = new Vue({
 	el: '#app',
 	data: {
 		orderType : 0,
 		dt : 0,
-		domain : '',
+		dtTb : {},
+		judul : '',
+		topik : '',
+		bidang : '',
+		kelas : '',
 		errors: {},
-		orderId : 1,
+		dtId : '',
+		mdTr : '',
 		modal1 : false,
 		tableLoading : false
 	},
 	methods: {
-		saveHandler : function (){
-			
-			axios.post('asd',{
-				orderId : this.orderId,
-				domain : this.domain
+		modalOpen : function(tr) {
+			this.mdTr = tr
+			if(tr == "add"){
+				$('#modal-default').modal('show')
+				this.judul = ''
+				this.topik = ''
+				this.bidang = ''
+				this.errors = {}
+			}
+			else if(tr == 'edit'){
+				$('#modal-default').modal('show')
+				this.errors = {}
+			}
+		},
+		editData : function(id) {
+			this.judul = '{{ $kelompok->proposal->judul }}'
+			this.topik = '{{ $kelompok->proposal->topik }}'
+			this.bidang = '{{ $kelompok->proposal->bidang }}'
+			this.dtId = id
+			this.errors = {}
+			this.modalOpen('edit')
+		},
+		getDataById : function(id) {
+			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
+		},
+		editHandler : function() {
+			axios.post('{{ url("editProposal") }}',{
+				id : this.dtId,
+				judul : this.judul,
+				topik : this.topik,
+				bidang : this.bidang,	
 			})
 			.then(function (response) {
-				console.log(response)
+				// console.log(response)
 				app.errors = {}
 				window.location.reload()
 			})
@@ -196,9 +239,31 @@ var app = new Vue({
 				}
 			})
 		},
-		reloadTable : async function (id) {
+		saveHandler : function (){
+			
+			axios.post('{{ url("addProposal") }}',{
+				judul : this.judul,
+				topik : this.topik,
+				bidang : this.bidang,		
+			})
+			.then(function (response) {
+				// console.log(response)
+				app.errors = {}
+				window.location.reload()
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+				console.log(app.errors)
+			})
+		},
+		deleteHandler : async function (id) {
 			swal({
-				title: "Confirm Payment?",
+				title: "Akan Menghapus?",
 				text: "",
 				icon: "warning",
 				buttons: true,
@@ -206,7 +271,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('user/deleteLicense') }}",
+						url : "{{ url('deleteKelas') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -216,7 +281,7 @@ var app = new Vue({
 
 					})
 
-					swal("License Deleted", {
+					swal("Data Dihapus!", {
 					icon: "success",
 					});
 
@@ -235,23 +300,64 @@ var app = new Vue({
 				processing: true,
 				serverSide: true,
 				ajax: {
-						url : '{{ url("datagen/3/year,number,number") }}/',
+						url : '{{ url("kelasData") }}',
 						type: "GET",
 						dataType: "JSON",
+						complete : function(d){
+							app.dtTb = d.responseJSON.data
+							// console.log()
+						}
 				},
 				columns: [
 							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'idx0', name: 'idx0' },
-							{ data: 'idx1', name: 'idx1' },
-							{ data: 'idx2', name: 'idx2' },
+							{ data: 'tahunAj', name: 'tahunAj' },
+							{ data: 'dosen_name', name: 'dosen_name' },
+							{ data: 'jurusan_name', name: 'jurusan_name' },
+							{ data: 'kelas', name: 'kelas' },
 							{ data: 'action', name: 'action' },
 				]
 				});
 			});
+		},
+		getDataJurusan : function(){
+			axios.get('{{ url("getJurusanActive") }}')
+			.then(function (response) {
+				console.log(response.data)
+				$('.select2s').select2({
+					placeholder: "Pilih Jurusan",
+					data : response.data.data
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
+		},
+		getDataDosen : function(){
+			axios.get('{{ url("getDosen") }}')
+			.then(function (response) {
+				console.log(response.data)
+				$('.select2dosen').select2({
+					placeholder: "Pilih Dosen Pengajar",
+					data : response.data.data
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
 		}
 	},
 	async mounted() {
-		await this.createDataTable();
+	
 	},
 	watch : {
 		orderType : async function(){

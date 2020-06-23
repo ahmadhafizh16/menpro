@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
-class LoginController extends Controller
+class AdminLoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -18,6 +18,7 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
+    protected $guard = 'admin';
 
     use AuthenticatesUsers;
 
@@ -34,11 +35,30 @@ class LoginController extends Controller
      * @return void
      */
     public function username(){
-        return 'nim';
+        // dd("A");
+        return 'nid';
     }
 
-    
+    public function showLoginForm()
+    {
+        return view('auth.adminLogin');
+    }
 
+    public function guard()
+    {
+        return auth()->guard('admin');
+    }
+
+    public function login(Request $request)
+    {
+        if (auth()->guard('admin')->attempt(['nid' => $request->nid, 'password' => $request->password ])) {
+            // dd(auth()->guard("admin"));
+            return redirect("/home");
+        }
+
+
+        return back()->withErrors(['nid' => 'NID atau PIN salah.']);
+    }
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

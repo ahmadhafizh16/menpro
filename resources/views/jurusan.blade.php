@@ -15,7 +15,7 @@
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-12">
-						<button class="btn btn-success" @click=";$('#modal-default').modal('show')"><i class="fa fa-plus"></i> Tambah Jurusan</button>
+						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Tambah Jurusan</button>
 							<h3>List Jurusan : </h3>
 							<div v-if="tableLoading" class="fa-5x text-center">
 									<i class="fa fa-spinner fa-spin"></i>
@@ -25,9 +25,7 @@
 								<tr>
 									<th>No</th>
 									<th>Jurusan</th>
-									<th>Jumlah Mahasiswa KWU</th>
-									<th>Proposal Masuk</th>
-									<th>Laporan Akhir</th>
+									<th>Semester Aktif</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -45,15 +43,29 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">×</span></button>
-							<h4 class="modal-title">Tambah Jurusan</h4>
+							<h4 v-if="mdTr == 'add'" class="modal-title">Tambah Jurusan</h4>
+							<h4 v-if="mdTr == 'Edit'" class="modal-title">Edit Jurusan</h4>
 						</div>
 						<div class="modal-body">
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
+							<div :class="Boolean(errors.nama)? 'form-group has-error' : 'form-group'">
 								<label for="exampleInputEmail1">Nama Jurusan</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Nama Jurusan">
-								<span v-if="Boolean(errors.domain)"class="help-block">
+								<input type="text"  class="error form-control"  v-model="nama" placeholder="Nama Jurusan">
+								<span v-if="Boolean(errors.nama)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.nama">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+							<div :class="Boolean(errors.semester_aktif)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Semester Aktif</label>
+								<select class="error form-control" v-model="semester_aktif" placeholder="Semester Aktif">
+									<option value="1">Ganjil</option>
+									<option value="2">Genap</option>
+								</select>
+								<span v-if="Boolean(errors.semester_aktif)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.semester_aktif">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
@@ -66,8 +78,9 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+							<button v-if="mdTr == 'add'" type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button v-if="mdTr == 'edit'" type="button" class="btn btn-primary" @click="editHandler">Simpan</button>
 						</div>
 						</div>
 						<!-- /.modal-content -->
@@ -92,8 +105,12 @@
 @section('script')
 
 <script>
-function reloadTable(id){
-	app.reloadTable(id);
+function deleteDt(id){
+	app.deleteHandler(id);
+}
+
+function editDt(id){
+	app.editData(id);
 }
 
 var app = new Vue({
@@ -101,32 +118,49 @@ var app = new Vue({
 	data: {
 		orderType : 0,
 		dt : 0,
-		domain : '',
+		dtTb : {},
+		nama : '',
+		semester_aktif : '1',
 		errors: {},
-		orderId : 1,
+		dtId : '',
+		mdTr : '',
 		modal1 : false,
 		tableLoading : false
 	},
 	methods: {
-		order : function(){
-			if(this.orderType == 0){
-				return 'Pending'
+		modalOpen : function(tr) {
+			this.mdTr = tr
+			if(tr == "add"){
+				$('#modal-default').modal('show')
+				this.nama = ''
+				this.semester_aktif = '1'
+				this.errors = {}
 			}
-			else if (this.orderType == 1) {
-				return 'Expire'
-			}
-			else if (this.orderType == 2) {
-				return 'Paid'
+			else if(tr == 'edit'){
+				$('#modal-default').modal('show')
+				this.errors = {}
 			}
 		},
-		saveHandler : function (){
-			
-			axios.post('asd',{
-				orderId : this.orderId,
-				domain : this.domain
+		editData : function(id) {
+			let d = this.getDataById(id) 
+			this.nama = d.nama
+			this.dtId = d.id
+			this.semester_aktif = d.semester_aktif
+			this.errors = {}
+			this.modalOpen('edit')
+
+		},
+		getDataById : function(id) {
+			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
+		},
+		editHandler : function() {
+			axios.post('{{ url("editJurusan") }}',{
+				id : this.dtId,
+				nama : this.nama,
+				semester_aktif : this.semester_aktif
 			})
 			.then(function (response) {
-				console.log(response)
+				// console.log(response)
 				app.errors = {}
 				window.location.reload()
 			})
@@ -139,9 +173,29 @@ var app = new Vue({
 				}
 			})
 		},
-		reloadTable : async function (id) {
+		saveHandler : function (){
+			
+			axios.post('{{ url("addJurusan") }}',{
+				nama : this.nama,
+				semester_aktif : this.semester_aktif
+			})
+			.then(function (response) {
+				// console.log(response)
+				app.errors = {}
+				window.location.reload()
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
+		},
+		deleteHandler : async function (id) {
 			swal({
-				title: "Confirm Payment?",
+				title: "Akan Menghapus?",
 				text: "",
 				icon: "warning",
 				buttons: true,
@@ -149,7 +203,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('user/deleteLicense') }}",
+						url : "{{ url('deleteJurusan') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -159,7 +213,7 @@ var app = new Vue({
 
 					})
 
-					swal("License Deleted", {
+					swal("Data Dihapus!", {
 					icon: "success",
 					});
 
@@ -178,16 +232,18 @@ var app = new Vue({
 				processing: true,
 				serverSide: true,
 				ajax: {
-						url : '{{ url("datagen/4/word,number,number,number") }}/',
+						url : '{{ url("jurusanData") }}',
 						type: "GET",
 						dataType: "JSON",
+						complete : function(d){
+							app.dtTb = d.responseJSON.data
+							// console.log()
+						}
 				},
 				columns: [
 							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'idx0', name: 'idx0' },
-							{ data: 'idx1', name: 'idx1' },
-							{ data: 'idx2', name: 'idx2' },
-							{ data: 'idx3', name: 'idx3' },
+							{ data: 'nama', name: 'nama' },
+							{ data: 'semester_act', name: 'semester_act' },
 							{ data: 'action', name: 'action' },
 				]
 				});

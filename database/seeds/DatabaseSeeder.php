@@ -12,12 +12,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $n = new User();
-        $n->username = "admin";
-        $n->password = bcrypt("admin");
-        $n->name = "Admin";
-        $n->email = "a@a.com";
-        $n->save();
+
+        for($i = 15;$i <= 20;$i++){
+            for($j = 100;$j <= 130;$j++){
+                $faker = \Faker\Factory::create();
+                $n = new User();
+                $n->nim = "$i"."2016"."$j";
+                $n->nama = $faker->name;
+                $n->email = $faker->email;
+                $n->alamat = $faker->address;
+                $n->pin = "111111";
+                $n->jenis_kelamin = $j % 2 == 1 ? "L" : "P";
+                $n->save();
+            }
+        }
 
         // $this->call(UsersTableSeeder::class);
     }

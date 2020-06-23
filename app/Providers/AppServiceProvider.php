@@ -26,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Schema::defaultStringLength(191);
+        $guard = "";
+        if(auth()->guard("web")->check()){
+            $guard = "web";
+        }
+        else if(auth()->guard("admin")->check()){
+            $guard = "admin";
+        }
+        view()->share("grd",$guard);
 
     }
 }

@@ -25,16 +25,17 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-            <span class="hidden-xs">{{ Auth::user()->name }}</span>
+              {{-- {{ dd($grd) }} --}}
+            <span class="hidden-xs">{{ Auth::guard($grd)->user()->nama }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header text-center" style="height:auto;">
-                <div class="" alt="User Image" style="margin: 0 auto;width:19%;font-weight:bold;font-size:20px;color:white;background: #3c8dbc;border:3px solid #fff;border-radius:50%;padding:6px 15px;">{{ strtoupper(Auth::user()->name[0]) }}</div>
+                <div class="" alt="User Image" style="margin: 0 auto;width:19%;font-weight:bold;font-size:20px;color:white;background: #3c8dbc;border:3px solid #fff;border-radius:50%;padding:6px 15px;">{{ strtoupper(Auth::guard($grd)->user()->nama[0]) }}</div>
         
 
                 <p>
-                    {{ Auth::user()->name }}
+                    {{ Auth::guard($grd)->user()->nama }}
                 </p>
               </li>
               <!-- Menu Body -->

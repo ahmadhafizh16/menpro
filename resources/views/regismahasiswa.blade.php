@@ -4,7 +4,7 @@
 <div id="app">
 	<section class="content-header">
 			<h1>
-				Data Kelompok <button class="btn btn-success" @click=";$('#modal-default').modal('show')"><i class="fa fa-plus"></i> Daftarkan Kelompok</button>
+				Data Kelompok @if(!$isAda) <button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Daftarkan Kelompok</button> @endif
 				<small></small>
 			</h1>
 	</section>
@@ -20,21 +20,26 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-12">
+								@if($isAda)
 								<table class="table " style="font-size:16px;">
 									<tbody>
 									<tr>
 										<td><b>Nama Kelompok</b></td>
-										<td>: Kelompok A Informatika</td>
+										<td>: {{ $kelompok->nama_kel }}</td>
 									</tr>
 									<tr>
 										<td><b>Anggota Kelompok</b></td>
-										<td>: • [15-2016-120] Randy Hardianto</option>
-											<br>&nbsp; • [15-2016-121] Ridwa Ismail</option>
-											<br>&nbsp; • [15-2016-122] Gustian P</option></td>
+										<td>
+										@foreach ($kelompok->mhs()->get() as $mhs)
+											
+										 • [{{ $mhs->nim }}] {{ $mhs->nama }}<br>
+										
+										@endforeach
+									</td>
 									</tr>
 									<tr>
 										<td><b>Dosen Pembimbing</b></td>
-										<td>:[120011591] Dr. Zane Stroman</td>
+										<td>:[{{ $kelompok->dosen->nid }}] {{ $kelompok->dosen->nama }}</td>
 									</tr>
 									<tr>
 										<td><b>Kelas</b></td>
@@ -43,6 +48,9 @@
 									
 								  </tbody>
 								</table>
+								@else
+								<h2 class="text-center"> Belum Daftar Kelompok</h2>
+								@endif
 							</div>
 						</div>
 						<div class="ajax-content">
@@ -183,99 +191,73 @@
 			</li>
 		
 		</ul>
-
 		<div class="modal fade in" id="modal-default">
 			<div class="modal-dialog">
 				<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span></button>
-					<h4 class="modal-title">Daftarkan Kelompok</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="">Nama Kelompok</label>
-						<input type="text"  class="error form-control" id="" placeholder="Nama Kelompok">
-						<span v-if="Boolean(errors.name)"class="help-block">
-							<ul>
-								<li v-for="(item,index) in errors.name">@{{ item }}</li>
-							</ul>
-						</span>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span></button>
+						<h4 class="modal-title">Daftarkan Kelompok</h4>
 					</div>
-					<div class="form-group">
-						<label for="">Anggota Kelompok</label><br>
-						<select class="select2s form-control" name="states[]" multiple="multiple" style="width:100% !important;">
-							<option value="AL">[15-2016-120] Randy Hardianto</option>
-							<option value="AL">[15-2016-121] Ridwa Ismail</option>
-							<option value="AL">[15-2016-122] Gustian P</option>
-							<option value="AL">[15-2016-123] Yulianto A N</option>
-							<option value="AL">[15-2016-124] Rifki M</option>
-							<option value="AL">[15-2016-125] Lukman A</option>
-							<option value="AL">[15-2016-126] Diki A</option>
-							<option value="AL">[15-2016-127] Ahmad H</option>
-							<option value="AL">[15-2016-128] Bachtiar A</option>
-							<option value="AL">[15-2016-129] Mahasiswa</option>
-							<option value="AL">[15-2016-130] Randy ABC</option>
-							
-						</select>
-						<span v-if="Boolean(errors.name)"class="help-block">
-							<ul>
-								<li v-for="(item,index) in errors.name">@{{ item }}</li>
-							</ul>
-						</span>
+					<div class="modal-body">
+						<div :class="Boolean(errors.nama_kel)? 'form-group has-error' : 'form-group'">
+							<label for="">Nama Kelompok</label>
+							<input type="text"  class="error form-control" v-model="nama_kel" placeholder="Nama Kelompok">
+							<span v-if="Boolean(errors.nama_kel)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.nama_kel">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="">Anggota Kelompok</label><br>
+							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" style="width:100% !important;">
+								<option></option>
+							</select>
+							<span v-if="Boolean(errors.name)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.name">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="">Dosen Pembimbing</label>
+							<select class="select2dosen form-control" onchange="app.dosen = $('.select2dosen').val()" style="width:100% !important;">
+								<option></option>
+							</select>
+							<span v-if="Boolean(errors.name)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.name">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="">Kelas</label>
+							<select class="select2kelas form-control" onchange="app.kelas = $('.select2kelas').val()" style="width:100% !important;">
+								<option></option>
+							</select>
+							<span v-if="Boolean(errors.name)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.name">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+	
 					</div>
-					<div class="form-group">
-						<label for="">Dosen Pembimbing</label>
-						<select class="select2s form-control" name="sz" style="width:100% !important;">
-							<option value="AL">[120011591] Dr. Zane Stroman</option>
-							<option value="AL">[120011592] Dr. Niman Zein</option>
-							<option value="AL">[120011593] Prof. Ade Gustian P</option>
-							<option value="AL">[120011594] Prof. Yulianto A N</option>
-							<option value="AL">[120011595] Ir. Rifki M</option>
-							<option value="AL">[120011596] Lukman A, S.Kom,. M.T</option>
-							<option value="AL">[120011597] Diki A, S.Kom,. M.T</option>
-							<option value="AL">[120011598] Ahmad H, S.Kom,. M.T</option>
-							<option value="AL">[120011599] Bachtiar A, S.Kom,. M.T</option>
-							<option value="AL">[120011610] Mahasiswa</option>
-							<option value="AL">[120011211] Randy ABC</option>
-							
-						</select>
-						<span v-if="Boolean(errors.name)"class="help-block">
-							<ul>
-								<li v-for="(item,index) in errors.name">@{{ item }}</li>
-							</ul>
-						</span>
-					</div>
-					<div class="form-group">
-						<label for="">Kelas</label>
-						<select class="select2s form-control" name="sz" style="width:100% !important;">
-							<option value="AL">[IF20201A] Informatika A</option>
-							<option value="AL">[IF20201B] Informatika B</option>
-							<option value="AL">[IF20201C] Informatika C</option>
-							<option value="AL">[IF20201D] Informatika D</option>
-							
-							
-						</select>
-						<span v-if="Boolean(errors.name)"class="help-block">
-							<ul>
-								<li v-for="(item,index) in errors.name">@{{ item }}</li>
-							</ul>
-						</span>
-					</div>
-
-				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+					<button v-if="mdTr == 'add'" type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+					<button v-if="mdTr == 'edit'" type="button" class="btn btn-primary" @click="editHandler">Simpan</button>
 				</div>
 				</div>
 				<!-- /.modal-content -->
 			</div>
 			<!-- /.modal-dialog -->
 			</div>
+		</div>
+		
 		
 	</section>
-</div>
 	<!-- /.content -->
 @endsection
 
@@ -296,32 +278,60 @@ var app = new Vue({
 	data: {
 		orderType : 0,
 		dt : 0,
-		domain : '',
+		dtTb : {},
+		nama_kel : '',
+		kel : [],
+		dosen : '',
+		kelas : '',
 		errors: {},
-		orderId : 1,
+		dtId : '',
+		mdTr : '',
 		modal1 : false,
 		tableLoading : false
 	},
 	methods: {
-		order : function(){
-			if(this.orderType == 0){
-				return 'Pending'
+		modalOpen : function(tr) {
+			this.mdTr = tr
+			if(tr == "add"){
+				$('#modal-default').modal('show')
+				this.nama_kel = ''
+				this.kel = []
+				this.dosen = ''
+				this.kelas = ''
+				this.errors = {}
 			}
-			else if (this.orderType == 1) {
-				return 'Expire'
-			}
-			else if (this.orderType == 2) {
-				return 'Paid'
+			else if(tr == 'edit'){
+				$('#modal-default').modal('show')
+				this.errors = {}
 			}
 		},
-		saveHandler : function (){
-			
-			axios.post('asd',{
-				orderId : this.orderId,
-				domain : this.domain
+		editData : function(id) {
+			let d = this.getDataById(id)
+			$('.select2s').val(d.id_jurusan);
+			$('.select2s').trigger('change');
+			$('.select2dosen').val(d.id_dosen);
+			$('.select2dosen').trigger('change');
+			this.jurusan = d.id_jurusan
+			this.nama_kel = ''
+			this.dosen = d.id_dosen
+			this.kelas = d.kelas
+			this.dtId = d.id
+			this.errors = {}
+			this.modalOpen('edit')
+		},
+		getDataById : function(id) {
+			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
+		},
+		editHandler : function() {
+			axios.post('{{ url("editKelas") }}',{
+				id : this.dtId,
+				nama_kel : this.nama_kel,
+				kel : this.kel,
+				kelas : this.kelas,
+				dosen : this.dosen
 			})
 			.then(function (response) {
-				console.log(response)
+				// console.log(response)
 				app.errors = {}
 				window.location.reload()
 			})
@@ -334,9 +344,32 @@ var app = new Vue({
 				}
 			})
 		},
-		reloadTable : async function (id) {
+		saveHandler : function (){
+			
+			axios.post('{{ url("addKelompok") }}',{
+				nama_kel : this.nama_kel,
+				kel : this.kel,
+				kelas : this.kelas,
+				dosen : this.dosen
+			})
+			.then(function (response) {
+				// console.log(response)
+				app.errors = {}
+				window.location.reload()
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+				console.log(app.errors)
+			})
+		},
+		deleteHandler : async function (id) {
 			swal({
-				title: "Confirm Payment?",
+				title: "Akan Menghapus?",
 				text: "",
 				icon: "warning",
 				buttons: true,
@@ -344,7 +377,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('user/deleteLicense') }}",
+						url : "{{ url('deleteKelas') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -354,7 +387,7 @@ var app = new Vue({
 
 					})
 
-					swal("License Deleted", {
+					swal("Data Dihapus!", {
 					icon: "success",
 					});
 
@@ -367,30 +400,64 @@ var app = new Vue({
 			}); 
 			
 		},
-		createDataTable : function(){
-			$(document).ready(function(){
-				app.dt = $('#example1').DataTable({
-				processing: true,
-				serverSide: true,
-				ajax: {
-						url : '{{ url("datagen/4") }}/',
-						type: "GET",
-						dataType: "JSON",
-				},
-				columns: [
-							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'idx0', name: 'idx0' },
-							{ data: 'idx1', name: 'idx1' },
-							{ data: 'idx2', name: 'idx2' },
-							{ data: 'idx3', name: 'idx3' },
-							{ data: 'action', name: 'action' },
-				]
+		getDataKelas : function(){
+			axios.get('{{ url("getKelas") }}')
+			.then(function (response) {
+				$('.select2kelas').select2({
+					placeholder: "Pilih Kelas",
+					data : response.data.data
 				});
-			});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
+		},
+		getDataDosen : function(){
+			axios.get('{{ url("getDosen") }}')
+			.then(function (response) {
+				$('.select2dosen').select2({
+					placeholder: "Pilih Dosen Pembimbing",
+					data : response.data.data
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
+		},
+		getDataMhs : function(){
+			axios.get('{{ url("getMhs") }}')
+			.then(function (response) {
+				$('.select2mhs').select2({
+					placeholder: "Pilih Anggota",
+					data : response.data.data,
+					maximumSelectionLength: 3
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
 		}
 	},
 	async mounted() {
-		await this.createDataTable();
+		await this.getDataKelas();
+		await this.getDataDosen();
+		await this.getDataMhs();
+		// await this.createDataTable();
 	},
 	watch : {
 		orderType : async function(){

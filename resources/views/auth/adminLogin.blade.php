@@ -24,14 +24,15 @@
     @endif
     <div class="login-box-body">
       <p class="login-box-msg">Login</p>
-   
-      <form action="{{ url("login") }}" method="POST">
       
+     
+      <form action="{{ url("admin-login") }}" method="POST">
+    
         {{ csrf_field() }}
         <div class="form-group has-feedback">
-       
-            <input type="username" name="nim" value="{{ old("nim") }}" class="form-control" placeholder="NIM">
          
+            <input type="username" name="nid" value="{{ old("nid") }}" class="form-control" placeholder="NID">
+        
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">

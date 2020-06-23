@@ -11,7 +11,7 @@
             Hari Kewirausahaan Itenas.								
           </h1>
         <a href="{{url("/login")}}" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60" style="posisiton:relative;left:-700px;top:50px;">Login Mahasiswa </a>
-          <a href="{{url("/login")}}" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60" style="posisiton:relative;left:-700px;top:50px;">Login Dosen </a>
+          <a href="{{url("admin-login")}}" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60" style="posisiton:relative;left:-700px;top:50px;">Login Dosen </a>
         </div>	
         <div class="head-bottom-meta d-flex justify-content-between align-items-end col-lg-12">
           <div class="col-lg-6 flex-row d-flex meta-left no-padding">

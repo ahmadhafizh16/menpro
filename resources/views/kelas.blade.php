@@ -15,8 +15,8 @@
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-12">
-						<button class="btn btn-success" @click=";$('#modal-default').modal('show')"><i class="fa fa-plus"></i> Tambah Kelas</button>
-							<h3>List Jurusan : </h3>
+						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Tambah Kelas</button>
+							<h3>Data Kelas : </h3>
 							<div v-if="tableLoading" class="fa-5x text-center">
 									<i class="fa fa-spinner fa-spin"></i>
 							</div>
@@ -25,8 +25,8 @@
 								<tr>
 									<th>No</th>
 									<th>Tahun Ajaran</th>
+									<th>Nama Dosen</th>
 									<th>Jurusan</th>
-									<th>Dosen</th>
 									<th>Kelas</th>
 									<th>Action</th>
 								</tr>
@@ -45,50 +45,58 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">×</span></button>
-							<h4 class="modal-title">Tambah Kelas</h4>
+							<h4 v-if="mdTr == 'add'" class="modal-title">Tambah Kelas</h4>
+							<h4 v-if="mdTr == 'Edit'" class="modal-title">Edit Kelas</h4>
 						</div>
 						<div class="modal-body">
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
+							<div :class="Boolean(errors.tahun)? 'form-group has-error' : 'form-group'">
 								<label for="exampleInputEmail1">Tahun Ajaran</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Tahun Ajaran">
-								<span v-if="Boolean(errors.domain)"class="help-block">
-									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
-									</ul>
-								</span>
-							</div>
-
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Jurusan</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Jurusan">
-								<span v-if="Boolean(errors.domain)"class="help-block">
-									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
-									</ul>
-								</span>
-							</div>
-
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Dosen</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Dosen">
-								<span v-if="Boolean(errors.domain)"class="help-block">
-									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
-									</ul>
-								</span>
-							</div>
-
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Kelas</label>
-								<select class="form-control">
-									<option>A</option>
-									<option>B</option>
-									<option>C</option>
-									<option>D</option>
+								<select class="error form-control" v-model="tahun">
+									<option value="{{ $ta->id }}">{{ $ta->tahun }} - {{ $ta->semester_act }}</option>
 								</select>
-								<span v-if="Boolean(errors.domain)"class="help-block">
+								<span v-if="Boolean(errors.tahun)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.tahun">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+							<div :class="Boolean(errors.jurusan)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Jurusan</label>
+								<select class="select2s form-control" onchange="app.jurusan = $('.select2s').val()" style="width:100% !important;">
+									<option></option>
+								</select>
+								<span v-if="Boolean(errors.jurusan)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.jurusan">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+							<div :class="Boolean(errors.dosen)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Dosen Pengajar</label>
+								<select class="select2dosen form-control" onchange="app.dosen = $('.select2dosen').val()" style="width:100% !important;">
+									<option></option>
+								</select>
+								<span v-if="Boolean(errors.dosen)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.dosen">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+							<div :class="Boolean(errors.kelas)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Kelas</label>
+								<select class="form-control" v-model="kelas">
+									<option disabled hidden value="">--- Kelas ---</option>
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+								</select>
+								<span v-if="Boolean(errors.kelas)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.kelas">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
@@ -101,8 +109,9 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+							<button v-if="mdTr == 'add'" type="button" class="btn btn-primary" @click="saveHandler">Tambah</button>
+							<button v-if="mdTr == 'edit'" type="button" class="btn btn-primary" @click="editHandler">Simpan</button>
 						</div>
 						</div>
 						<!-- /.modal-content -->
@@ -121,47 +130,89 @@
 		
 	</section>
 </div>
-	<!-- /.content -->
+	<script type="text/x-template" id="demo-template">
+	
+	  <select2 :options="options" v-model="selected">
+		<option disabled value="0">Select one</option>
+	  </select2>
+
+  </script>
+  <!-- /.content -->
 @endsection
-
+  
 @section('script')
-
+  
 <script>
-function reloadTable(id){
-	app.reloadTable(id);
+
+function deleteDt(id){
+	app.deleteHandler(id);
 }
 
+function editDt(id){
+	app.editData(id);
+}
+
+
+	  
 var app = new Vue({
 	el: '#app',
 	data: {
 		orderType : 0,
 		dt : 0,
-		domain : '',
+		dtTb : {},
+		tahun : '{{ $ta->id }}',
+		jurusan : '',
+		dosen : '',
+		kelas : '',
 		errors: {},
-		orderId : 1,
+		dtId : '',
+		mdTr : '',
 		modal1 : false,
 		tableLoading : false
 	},
 	methods: {
-		order : function(){
-			if(this.orderType == 0){
-				return 'Pending'
+		modalOpen : function(tr) {
+			this.mdTr = tr
+			if(tr == "add"){
+				$('#modal-default').modal('show')
+				this.jurusan = ''
+				this.tahun = '{{ $ta->id }}'
+				this.dosen = ''
+				this.kelas = ''
+				this.errors = {}
 			}
-			else if (this.orderType == 1) {
-				return 'Expire'
-			}
-			else if (this.orderType == 2) {
-				return 'Paid'
+			else if(tr == 'edit'){
+				$('#modal-default').modal('show')
+				this.errors = {}
 			}
 		},
-		saveHandler : function (){
-			
-			axios.post('asd',{
-				orderId : this.orderId,
-				domain : this.domain
+		editData : function(id) {
+			let d = this.getDataById(id)
+			$('.select2s').val(d.id_jurusan);
+			$('.select2s').trigger('change');
+			$('.select2dosen').val(d.id_dosen);
+			$('.select2dosen').trigger('change');
+			this.jurusan = d.id_jurusan
+			this.tahun = '{{ $ta->id }}'
+			this.dosen = d.id_dosen
+			this.kelas = d.kelas
+			this.dtId = d.id
+			this.errors = {}
+			this.modalOpen('edit')
+		},
+		getDataById : function(id) {
+			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
+		},
+		editHandler : function() {
+			axios.post('{{ url("editKelas") }}',{
+				id : this.dtId,
+				tahun : this.tahun,
+				jurusan : this.jurusan,
+				kelas : this.kelas,
+				dosen : this.dosen
 			})
 			.then(function (response) {
-				console.log(response)
+				// console.log(response)
 				app.errors = {}
 				window.location.reload()
 			})
@@ -174,9 +225,32 @@ var app = new Vue({
 				}
 			})
 		},
-		reloadTable : async function (id) {
+		saveHandler : function (){
+			
+			axios.post('{{ url("addKelas") }}',{
+				tahun : this.tahun,
+				jurusan : this.jurusan,
+				kelas : this.kelas,
+				dosen : this.dosen
+			})
+			.then(function (response) {
+				// console.log(response)
+				app.errors = {}
+				window.location.reload()
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+				console.log(app.errors)
+			})
+		},
+		deleteHandler : async function (id) {
 			swal({
-				title: "Confirm Payment?",
+				title: "Akan Menghapus?",
 				text: "",
 				icon: "warning",
 				buttons: true,
@@ -184,7 +258,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('user/deleteLicense') }}",
+						url : "{{ url('deleteKelas') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -194,7 +268,7 @@ var app = new Vue({
 
 					})
 
-					swal("License Deleted", {
+					swal("Data Dihapus!", {
 					icon: "success",
 					});
 
@@ -213,23 +287,65 @@ var app = new Vue({
 				processing: true,
 				serverSide: true,
 				ajax: {
-						url : '{{ url("datagen/4/semester,word,name,letter") }}/',
+						url : '{{ url("kelasData") }}',
 						type: "GET",
 						dataType: "JSON",
+						complete : function(d){
+							app.dtTb = d.responseJSON.data
+							// console.log()
+						}
 				},
 				columns: [
 							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'idx0', name: 'idx0' },
-							{ data: 'idx1', name: 'idx1' },
-							{ data: 'idx2', name: 'idx2' },
-							{ data: 'idx3', name: 'idx3' },
+							{ data: 'tahunAj', name: 'tahunAj' },
+							{ data: 'dosen_name', name: 'dosen_name' },
+							{ data: 'jurusan_name', name: 'jurusan_name' },
+							{ data: 'kelas', name: 'kelas' },
 							{ data: 'action', name: 'action' },
 				]
 				});
 			});
+		},
+		getDataJurusan : function(){
+			axios.get('{{ url("getJurusanActive") }}')
+			.then(function (response) {
+				console.log(response.data)
+				$('.select2s').select2({
+					placeholder: "Pilih Jurusan",
+					data : response.data.data
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
+		},
+		getDataDosen : function(){
+			axios.get('{{ url("getDosen") }}')
+			.then(function (response) {
+				console.log(response.data)
+				$('.select2dosen').select2({
+					placeholder: "Pilih Dosen Pengajar",
+					data : response.data.data
+				});
+			})
+			.catch(function (error) {
+				if(Boolean(error.response.data.errors)){
+					app.errors = error.response.data.errors;
+				}
+				else{
+					app.errors = error.response.data.data;
+				}
+			})
 		}
 	},
 	async mounted() {
+		await this.getDataJurusan();
+		await this.getDataDosen();
 		await this.createDataTable();
 	},
 	watch : {
