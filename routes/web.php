@@ -34,6 +34,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/jurusan', 'HomeController@jurusan')->name('manage_jurusan');
     Route::get('/setKelas', 'HomeController@setKelas')->name('setKelas');
     Route::get('/tahunajaran', 'HomeController@tahunAjaran')->name('tahunajaran');
+
+    Route::get('/dataKelompok', 'HomeController@dataKelompok')->name('dataKelompok');
+    Route::get('/dataProposal', 'HomeController@dataProposal')->name('dataProposal');
+    Route::get('/createPengumuman', 'HomeController@createPengumuman')->name('createPengumuman');
     
     #ROUTE ADD
     Route::post("addJurusan","AdminController@addJurusan");
@@ -67,6 +71,7 @@ Route::get('/getMhs', 'AdminController@getMhs');
 
 Route::middleware('auth:web')->group(function () {
     Route::get('/regis', 'HomeController@regisMhs')->name('regis');
+    Route::get('/uplProposal', 'HomeController@uplProposal')->name('uplProposal');
 
 
     Route::post('/addKelompok', 'HomeController@addKelompok');
@@ -76,10 +81,7 @@ Route::middleware('auth:web')->group(function () {
 });
 
 Route::get('/l', 'HomeController@index')->name('home');
-Route::get('/uplProposal', 'HomeController@uplProposal')->name('uplProposal');
-Route::get('/dataKelompok', 'HomeController@dataKelompok')->name('dataKelompok');
-Route::get('/dataProposal', 'HomeController@dataProposal')->name('dataProposal');
-Route::get('/createPengumuman', 'HomeController@createPengumuman')->name('createPengumuman');
+
 Route::get('/uplBanner', 'HomeController@uplBanner')->name('uplBanner');
 
 Route::get('/datagen/{dataN}/{var?}/{action?}', 'HomeController@dataGen')->name('dataGen');

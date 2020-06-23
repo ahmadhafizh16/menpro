@@ -46,7 +46,6 @@
               <li><a href="#travel">Proposal</a></li>
               
               <li><a href="#team">Tim Dosen</a></li>
-              <li><a href="{{ url("/login") }}">Login</a></li>
               <!-- Dropdown -->
                 {{-- <li class="dropdown">
                   <a class="dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">

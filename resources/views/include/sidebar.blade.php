@@ -1,15 +1,19 @@
 <aside class="main-sidebar">
     @php
         $path = Request::path();
-        $mhs =auth()->guard("web")->user()->id;
-        $dtKel = \DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+        $isAda = '';
+        if(auth()->guard("web")->check()){
 
-        $isAda = $dtKel->exists();
-        
-        if($isAda){
+          $mhs =auth()->guard("web")->user()->id;
+          $dtKel = \DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+          
+          $isAda = $dtKel->exists();
+          
+          if($isAda){
             $dtKel = $dtKel->first();
             // $kelompok = App\Kelompok::find($dtKel->id_kelompok);
             // dd($kelompok->mhs()->get());
+          }
         }
     @endphp
     <!-- sidebar: style can be found in sidebar.less -->
