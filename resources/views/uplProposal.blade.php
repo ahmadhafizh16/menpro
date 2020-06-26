@@ -300,7 +300,7 @@ var app = new Vue({
 			formData.append('judulFile', this.judulFile);
 			formData.append('keterangan', this.keterangan);
 
-			axios.post( {{ url('/uploadProp') }},
+			axios.post( '{{ url('/uploadProp') }}',
 						formData,
 						{
 							headers: {
