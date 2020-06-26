@@ -113,7 +113,7 @@ var app = new Vue({
 			formData.append('file', this.file);
 			formData.append('id', '{{ $prop->id }}');
 
-			axios.post( '/uploadBanner',
+			axios.post( {{ url('/uploadBanner') }},
 						formData,
 						{
 							headers: {
