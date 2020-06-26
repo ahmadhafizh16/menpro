@@ -7,6 +7,7 @@ use Auth;
 use DataTables;
 use App\Kelompok;
 use App\Proposal;
+use App\ProposalHistory;
 use App\TahunAjaran as TA;
 use Illuminate\Http\Request;
 
@@ -57,20 +58,28 @@ class HomeController extends Controller
     {
         $mhs =auth()->guard("web")->user()->id;
         $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
-
         $isAda = $dtKel->exists();
-        
         if($isAda){
             $dtKel = $dtKel->first();
             $kelompok = Kelompok::find($dtKel->id_kelompok);
+            $isUploaded = ProposalHistory::where("id_proposal",$kelompok->id_proposal)->get();
             // dd($kelompok->mhs()->get());
         }
-        return view('uplProposal',compact("isAda","kelompok"));
+        // dd($isUploaded->isEmpty());
+        return view('uplProposal',compact("isAda","kelompok","isUploaded"));
     }
 
     public function uplBanner()
     {
-        return view('uplBanner');
+        $mhs =auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+        
+        $dtKel = $dtKel->first();
+        $kelompok = Kelompok::find($dtKel->id_kelompok);
+        $prop = Proposal::find($kelompok->id_proposal);
+
+        
+        return view('uplBanner',compact("prop"));
     }
 
     public function dataKelompok()
@@ -89,7 +98,8 @@ class HomeController extends Controller
     } 
 
     public function regisMhs()
-    {   $mhs =auth()->guard("web")->user()->id;
+    {   
+        $mhs =auth()->guard("web")->user()->id;
         $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
 
         $isAda = $dtKel->exists();
@@ -168,6 +178,69 @@ class HomeController extends Controller
         $inp->topik = $req->topik;
         $inp->bidang = $req->bidang;
         $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function uploadProp(Request $req)
+    {   
+        $validatedData = $req->validate([
+            // 'id' => 'required',
+            'judulFile' => 'required',
+            'keterangan' => 'required',
+            'file' => 'required|mimes:doc,pdf,docx|max:10240',
+        ]);
+        
+        $mhs =auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+
+        $dtKel = $dtKel->first();
+        $kelompok = Kelompok::find($dtKel->id_kelompok);
+            
+        $fName = time().'_'.$req->file->getClientOriginalName();
+        $req->file->move(public_path('upload'), $fName);
+        
+        $inp = new ProposalHistory();
+        $inp->judul_file = $req->judulFile;
+        $inp->keterangan = $req->keterangan;
+        $inp->id_proposal = $kelompok->id_proposal;
+        $inp->file_proposal = "upload/".$fName;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function uploadBanner(Request $req)
+    {   
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'file' => 'required|mimes:png,jpg,jpeg|max:10240',
+        ]);
+        
+      
+        $inp = Proposal::find($req->id);
+            
+        $fName = time().'_'.$req->file->getClientOriginalName();
+        $req->file->move(public_path('upload'), $fName);
+        if(!empty($inp->banner)){
+            unlink(public_path("/").$inp->banner);
+        }
+        $inp->banner = "upload/".$fName;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function deleteProp(Request $req)
+    {   
+        $validatedData = $req->validate([
+            // 'id' => 'required',
+            'id' => 'required',
+        ]);
+       
+        $inp = ProposalHistory::find($req->id);
+        unlink(public_path("/").$inp->file_proposal);
+        $inp->delete();
 
         return $this->setResponse($inp);
     }

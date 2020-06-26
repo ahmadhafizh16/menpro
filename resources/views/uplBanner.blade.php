@@ -23,7 +23,11 @@
 							<div class="row">
 								<div class="col-md-12 text-center">
 									<h2> Priview Banner </h2>
-									<img src="{{asset("images/asd.jpeg")}}" style="width:300px;">
+									@if(!empty($prop->banner))
+									<img src="{{asset("$prop->banner")}}" style="width:300px;">
+									@else
+									<h3 style="text-align: center;">Belum Upload Banner</h3>
+									@endif
 								</div>
 							</div>
 						
@@ -41,12 +45,12 @@
 							<h4 class="modal-title">Upload Banner</h4>
 						</div>
 						<div class="modal-body">
-							<div :class="Boolean(errors.domain)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Banner</label>
-								<input type="file"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Judul">
-								<span v-if="Boolean(errors.domain)"class="help-block">
+							<div :class="Boolean(errors.file)? 'form-group has-error' : 'form-group'">
+								<label >File</label>
+								<input type="file"  class="error form-control" ref="file" @change="fileHandler()" placeholder="file" accept=".png,jpg,jpeg">
+								<span v-if="Boolean(errors.file)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.domain">@{{ item }}</li>
+										<li v-for="(item,index) in errors.file">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
@@ -96,7 +100,7 @@ var app = new Vue({
 	data: {
 		orderType : 0,
 		dt : 0,
-		domain : '',
+		file : undefined,
 		errors: {},
 		orderId : 1,
 		modal1 : false,
@@ -105,88 +109,41 @@ var app = new Vue({
 	methods: {
 		saveHandler : function (){
 			
-			axios.post('asd',{
-				orderId : this.orderId,
-				domain : this.domain
-			})
-			.then(function (response) {
-				console.log(response)
-				app.errors = {}
-				window.location.reload()
-			})
-			.catch(function (error) {
-				if(Boolean(error.response.data.errors)){
-					app.errors = error.response.data.errors;
-				}
-				else{
-					app.errors = error.response.data.data;
-				}
-			})
-		},
-		reloadTable : async function (id) {
-			swal({
-				title: "Confirm Payment?",
-				text: "",
-				icon: "warning",
-				buttons: true,
-			})
-			.then(async (confirmed) => {
-				if (confirmed) {
-					await $.ajax({
-						url : "{{ url('user/deleteLicense') }}",
-						method : "POST",
-						dataType : "JSON",
-						data : {"id" : id},
-						success : function (data){
-							// console.log(data)
+			let formData = new FormData()
+			formData.append('file', this.file);
+			formData.append('id', '{{ $prop->id }}');
+
+			axios.post( '/uploadBanner',
+						formData,
+						{
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
 						}
-
-					})
-
-					swal("License Deleted", {
-					icon: "success",
-					});
-
-					this.dt.destroy();
-					this.tableLoading = true
-					await this.createDataTable();
-					this.tableLoading = false
-
-				}
-			}); 
-			
-		},
-		createDataTable : function(){
-			$(document).ready(function(){
-				app.dt = $('#example1').DataTable({
-				processing: true,
-				serverSide: true,
-				ajax: {
-						url : '{{ url("datagen/3/year,number,number") }}/',
-						type: "GET",
-						dataType: "JSON",
-				},
-				columns: [
-							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'idx0', name: 'idx0' },
-							{ data: 'idx1', name: 'idx1' },
-							{ data: 'idx2', name: 'idx2' },
-							{ data: 'action', name: 'action' },
-				]
+				).then(function(){
+					app.errors = {}
+					window.location.reload()
+					
+				})
+				.catch(function(error){
+					if(Boolean(error.response.data.errors)){
+						app.errors = error.response.data.errors;
+					}
+					else{
+						app.errors = error.response.data.data;
+					}
 				});
-			});
-		}
+		},
+		fileHandler : function(){
+			this.file = this.$refs.file.files[0]
+		},
+		
 	},
 	async mounted() {
-		await this.createDataTable();
+		
 	},
 	watch : {
-		orderType : async function(){
-			this.dt.destroy();
-			this.tableLoading = true
-			await this.createDataTable();
-			this.tableLoading = false
-		}
+		
 	}
 })
 </script>

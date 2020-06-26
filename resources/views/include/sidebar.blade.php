@@ -51,10 +51,11 @@
         <li><a href="{{ route("regis") }}"><i class="fa fa-users"></i> <span>Kelompok </span></a></li>
         @if($isAda)
         <li><a href="{{ route("uplProposal") }}"><i class="fa fa-file"></i> <span>Upload Proposal</span></a></li>
+        <li><a href="{{ route("uplBanner") }}"><i class="fa fa-image"></i> <span>Upload Banner</span></a></li>
         @else
         <li><a href="#" onclick="alert('Belum Input Data Kelompok')"><i class="fa fa-file"></i> <span>Upload Proposal</span></a></li>
+        <li><a href="#" onclick="alert('Belum Input Data Kelompok')"><i class="fa fa-image"></i> <span>Upload Banner</span></a></li>
         @endif
-        <li><a href="{{ route("regis") }}"><i class="fa fa-image"></i> <span>Upload Banner</span></a></li>
         @elseif(Auth::guard("admin")->check())
         @if(Auth::guard("admin")->user()->nama == "admin")
         <li><a href="{{ route("dashboard") }}"><i class="fa fa-dashboard"></i> <span>Dashboard </span></a></li>

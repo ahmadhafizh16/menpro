@@ -72,17 +72,21 @@ Route::get('/getMhs', 'AdminController@getMhs');
 Route::middleware('auth:web')->group(function () {
     Route::get('/regis', 'HomeController@regisMhs')->name('regis');
     Route::get('/uplProposal', 'HomeController@uplProposal')->name('uplProposal');
+    Route::get('/uplBanner', 'HomeController@uplBanner')->name('uplBanner');
 
 
     Route::post('/addKelompok', 'HomeController@addKelompok');
     Route::post('/addProposal', 'HomeController@addProposal');
 
     Route::post('/editProposal', 'HomeController@editProposal');
+    Route::post('/uploadProp', 'HomeController@uploadProp');
+    Route::post('/uploadBanner', 'HomeController@uploadBanner');
+    
+    Route::post('/deleteProp', 'HomeController@deleteProp');
 });
 
 Route::get('/l', 'HomeController@index')->name('home');
 
-Route::get('/uplBanner', 'HomeController@uplBanner')->name('uplBanner');
 
 Route::get('/datagen/{dataN}/{var?}/{action?}', 'HomeController@dataGen')->name('dataGen');
 Route::get('/orders', 'HomeController@index')->name('order');

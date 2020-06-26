@@ -49,10 +49,17 @@
 									</table>
 								</div>
 							</div>
-							<button class="btn btn-success" @click=";$('#modal-default').modal('show')"><i class="fa fa-plus"></i> Upload File & Revisi Proposal</button>
+							@if(!empty($kelompok->id_proposal))
+							<button class="btn btn-success" @click=";$('#modal-file').modal('show')"><i class="fa fa-plus"></i> Upload File & Revisi Proposal</button>
+							@endif
 
 							<div class="row">
 								<div class="col-md-12"><br>
+									@if($isUploaded->isEmpty())
+										@if(!empty($kelompok->id_proposal))
+										<h2 class="text-center"> Belum pernah upload file.</h2>
+										@endif
+									@else
 									<table class="table table-bordered table-hover" style="font-size:16px;">
 										<tbody>
 										<tr>
@@ -63,33 +70,20 @@
 											<th>Tanggal</th>
 											<th>Aksi</th>
 										</tr>
+										@foreach ($isUploaded as $k => $file)
 										<tr>
-											<td>1</td>
-											<td><a class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
-											<td> Proposal Tahap Awal </td>
-											<td> Proposal Tahap Awal </td>
-											<td> 20 Februari 2020 </td>
-											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
+											<td>{{ $k+1 }}</td>
+											<td><a  href="{{ url($file->file_proposal) }}" download class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
+											<td> {{ $file->judul_file }} </td>
+											<td> {{ $file->keterangan }} </td>
+											<td> {{ $file->upload_date }} </td>
+											<td> <button class="btn btn-danger" @click="deleteDt({{ $file->id }})"><i class="fa fa-trash"></i> Hapus</button> </td>
 										</tr>
-										<tr>
-											<td>2</td>
-											<td><a class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
-											<td> Proposal Revisi 1 </td>
-											<td> Perbaikan  Latar Belakang</td>
-											<td> 22 Februari 2020 </td>
-											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td><a class="btn btn-primary"><i class="fa fa-download"></i>  Download File </a></td>
-											<td> Proposal Revisi 2 </td>
-											<td> Perbaikan SWOT Analisis </td>
-											<td> 25 Februari 2020 </td>
-											<td> <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button> </td>
-										</tr>
+										@endforeach
 														
 									  </tbody>
 									</table>
+									@endif
 								</div>
 							</div>
 					</div>
@@ -106,8 +100,8 @@
 						</div>
 						<div class="modal-body">
 							<div :class="Boolean(errors.judul)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Judul</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="judul" placeholder="Judul">
+								<label >Judul</label>
+								<input type="text"  class="error form-control"  v-model="judul" placeholder="Judul">
 								<span v-if="Boolean(errors.judul)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.judul">@{{ item }}</li>
@@ -116,8 +110,8 @@
 							</div>
 
 							<div :class="Boolean(errors.topik)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Topik</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="topik" placeholder="Topik">
+								<label >Topik</label>
+								<input type="text"  class="error form-control"  v-model="topik" placeholder="Topik">
 								<span v-if="Boolean(errors.topik)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.topik">@{{ item }}</li>
@@ -126,8 +120,8 @@
 							</div>
 
 							<div :class="Boolean(errors.bidang)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Bidang</label>
-								<input type="text"  class="error form-control" id="exampleInputEmail1" v-model="bidang" placeholder="Bidang">
+								<label >Bidang</label>
+								<input type="text"  class="error form-control"  v-model="bidang" placeholder="Bidang">
 								<span v-if="Boolean(errors.bidang)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.bidang">@{{ item }}</li>
@@ -147,6 +141,58 @@
 					</div>
 					<!-- /.modal-dialog -->
 					</div>
+			
+
+			<div class="modal fade in" id="modal-file">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span></button>
+						<h4 class="modal-title">Upload Data Proposal</h4>
+					</div>
+					<div class="modal-body">
+						<div :class="Boolean(errors.judulFile)? 'form-group has-error' : 'form-group'">
+							<label >Judul File</label>
+							<input type="text"  class="error form-control"  v-model="judulFile" placeholder="Judul File">
+							<span v-if="Boolean(errors.judulFile)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.judulFile">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+
+						<div :class="Boolean(errors.keterangan)? 'form-group has-error' : 'form-group'">
+							<label >Keterangan</label>
+							<input type="text"  class="error form-control"  v-model="keterangan" placeholder="keterangan">
+							<span v-if="Boolean(errors.keterangan)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.keterangan">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+
+						<div :class="Boolean(errors.file)? 'form-group has-error' : 'form-group'">
+							<label >file</label>
+							<input type="file"  class="error form-control" ref="file" @change="fileHandler()" placeholder="file" accept=".doc,.docx,.pdf">
+							<span v-if="Boolean(errors.file)"class="help-block">
+								<ul>
+									<li v-for="(item,index) in errors.file">@{{ item }}</li>
+								</ul>
+							</span>
+						</div>
+
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" @click="uploadHandler">Tambah</button>
+					</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+				</div>
 			</div>
 			
 			<!-- /.box-body -->
@@ -154,7 +200,7 @@
 				Footer
 			</div>
 			<!-- /.box-footer-->
-		</div>
+		
 		<!-- /.box -->
 		
 	</section>
@@ -182,7 +228,10 @@ var app = new Vue({
 		orderType : 0,
 		dt : 0,
 		dtTb : {},
+		file : undefined,
 		judul : '',
+		judulFile : '',
+		keterangan : '',
 		topik : '',
 		bidang : '',
 		kelas : '',
@@ -208,9 +257,11 @@ var app = new Vue({
 			}
 		},
 		editData : function(id) {
+			@if(!empty($kelompok->id_proposal))
 			this.judul = '{{ $kelompok->proposal->judul }}'
 			this.topik = '{{ $kelompok->proposal->topik }}'
 			this.bidang = '{{ $kelompok->proposal->bidang }}'
+			@endif
 			this.dtId = id
 			this.errors = {}
 			this.modalOpen('edit')
@@ -238,6 +289,38 @@ var app = new Vue({
 					app.errors = error.response.data.data;
 				}
 			})
+		},
+		fileHandler : function(){
+			console.log(this.$refs.file.files[0])
+			this.file = this.$refs.file.files[0]
+		},
+		uploadHandler : function(){
+			let formData = new FormData()
+			formData.append('file', this.file);
+			formData.append('judulFile', this.judulFile);
+			formData.append('keterangan', this.keterangan);
+
+			axios.post( '/uploadProp',
+						formData,
+						{
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						}
+				).then(function(){
+					app.errors = {}
+					window.location.reload()
+					
+				})
+				.catch(function(error){
+					if(Boolean(error.response.data.errors)){
+						app.errors = error.response.data.errors;
+					}
+					else{
+						app.errors = error.response.data.data;
+					}
+				});
+			// console.log(this.$refs.file.files[0])
 		},
 		saveHandler : function (){
 			
@@ -271,7 +354,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('deleteKelas') }}",
+						url : "{{ url('deleteProp') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -281,91 +364,22 @@ var app = new Vue({
 
 					})
 
-					swal("Data Dihapus!", {
-					icon: "success",
+					await swal("Data Dihapus!", {
+						icon: "success",
 					});
 
-					this.dt.destroy();
-					this.tableLoading = true
-					await this.createDataTable();
-					this.tableLoading = false
+					window.location.reload()
 
 				}
 			}); 
 			
 		},
-		createDataTable : function(){
-			$(document).ready(function(){
-				app.dt = $('#example1').DataTable({
-				processing: true,
-				serverSide: true,
-				ajax: {
-						url : '{{ url("kelasData") }}',
-						type: "GET",
-						dataType: "JSON",
-						complete : function(d){
-							app.dtTb = d.responseJSON.data
-							// console.log()
-						}
-				},
-				columns: [
-							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
-							{ data: 'tahunAj', name: 'tahunAj' },
-							{ data: 'dosen_name', name: 'dosen_name' },
-							{ data: 'jurusan_name', name: 'jurusan_name' },
-							{ data: 'kelas', name: 'kelas' },
-							{ data: 'action', name: 'action' },
-				]
-				});
-			});
-		},
-		getDataJurusan : function(){
-			axios.get('{{ url("getJurusanActive") }}')
-			.then(function (response) {
-				console.log(response.data)
-				$('.select2s').select2({
-					placeholder: "Pilih Jurusan",
-					data : response.data.data
-				});
-			})
-			.catch(function (error) {
-				if(Boolean(error.response.data.errors)){
-					app.errors = error.response.data.errors;
-				}
-				else{
-					app.errors = error.response.data.data;
-				}
-			})
-		},
-		getDataDosen : function(){
-			axios.get('{{ url("getDosen") }}')
-			.then(function (response) {
-				console.log(response.data)
-				$('.select2dosen').select2({
-					placeholder: "Pilih Dosen Pengajar",
-					data : response.data.data
-				});
-			})
-			.catch(function (error) {
-				if(Boolean(error.response.data.errors)){
-					app.errors = error.response.data.errors;
-				}
-				else{
-					app.errors = error.response.data.data;
-				}
-			})
-		}
 	},
 	async mounted() {
 	
 	},
 	watch : {
-		orderType : async function(){
-			this.dt.destroy();
-			this.tableLoading = true
-			await this.createDataTable();
-			this.tableLoading = false
-		}
+		
 	}
 })
 </script>

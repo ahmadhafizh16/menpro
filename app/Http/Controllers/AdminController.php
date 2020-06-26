@@ -235,7 +235,7 @@ class AdminController extends Controller
     {
         $ta = TA::where("isActive",1)->first();
 
-        $jur = Kelas::orderBy("id_jurusan","desc")->orderBy("kelas","asc")->get();
+        $jur = Kelas::where("id_tahunajaran",$ta->id)->orderBy("id_jurusan","desc")->orderBy("kelas","asc")->get();
 
         return DataTables::of($jur)
                             ->addIndexColumn()
