@@ -30,7 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        if(Auth::guard("web")->check()) return redirect("/regis");
+        if(Auth::user()->role == 4) return redirect("/regis");
         return view('home');
     }
     
@@ -41,6 +41,11 @@ class HomeController extends Controller
     public function jurusan()
     {
         return view('jurusan');
+    }
+
+    public function setDosen()
+    {
+        return view('setDosen');
     }
     
     public function setKelas()
@@ -57,7 +62,7 @@ class HomeController extends Controller
     public function uplProposal()
     {
         $mhs =auth()->guard("web")->user()->id;
-        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+        $dtKel = DB::table("detail_kelompok")->where("id_user",$mhs);
         $isAda = $dtKel->exists();
         if($isAda){
             $dtKel = $dtKel->first();
@@ -72,7 +77,7 @@ class HomeController extends Controller
     public function uplBanner()
     {
         $mhs =auth()->guard("web")->user()->id;
-        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+        $dtKel = DB::table("detail_kelompok")->where("id_user",$mhs);
         
         $dtKel = $dtKel->first();
         $kelompok = Kelompok::find($dtKel->id_kelompok);
@@ -91,26 +96,26 @@ class HomeController extends Controller
     {
         return view('dataProposal');
     }
-    
-    public function createPengumuman()
-    {
-        return view('createPengumuman');
-    } 
 
     public function regisMhs()
     {   
-        $mhs =auth()->guard("web")->user()->id;
-        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
-
+        $mhs = auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_user",$mhs);
         $isAda = $dtKel->exists();
+        // dd($isAda);
         
+        $isUploaded = ProposalHistory::where("id_proposal","0")->get();
         if($isAda){
             $dtKel = $dtKel->first();
             $kelompok = Kelompok::find($dtKel->id_kelompok);
             // dd($kelompok->mhs()->get());
+            if(!empty($kelompok->id_proposal)){
+                $isUploaded = ProposalHistory::where("id_proposal",$kelompok->id_proposal)->get();
+            }
         }
+        // dd($isUploaded[0]);
         
-        return view('regismahasiswa',compact("isAda","kelompok"));
+        return view('regismahasiswa',compact("isAda","kelompok","isUploaded"));
     }
 
     public function addKelompok(Request $req)
@@ -118,22 +123,23 @@ class HomeController extends Controller
         $validatedData = $req->validate([
             'dosen' => 'required',
             'nama_kel' => 'required',
-            'kel' => 'required',
+            'kel' => 'required|min:2',
             'kelas' => 'required',
-        ]);
+        ],["min" => "Pilih 2 anggota kelompok"]);
         // dd($req->all());
         // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
         //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
         // }
-
+        $kel = $req->kel;
+        array_push($kel,Auth::user()->id);
         $inp = new Kelompok();
         $inp->id_dosbing = $req->dosen;
         $inp->id_kelas = $req->kelas;
         $inp->nama_kel = $req->nama_kel;
         $inp->save();
 
-        $inp->mhs()->attach($req->kel);
-
+        $inp->mhs()->attach($kel);
+        
         return $this->setResponse($inp);
     }
 
@@ -141,21 +147,23 @@ class HomeController extends Controller
     {
         $validatedData = $req->validate([
             'judul' => 'required',
-            'topik' => 'required',
+            'jenis' => 'required',
             'bidang' => 'required',
+            'deskripsi' => 'required',
         ]);
         // dd($req->all());
         // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
         //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
         // }
-        $mhs =auth()->guard("web")->user()->id;
-        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs)->first();
+        $mhs = auth()->guard("web")->user()->id;
+        $dtKel = DB::table("detail_kelompok")->where("id_user",$mhs)->first();
         $kelompok = Kelompok::find($dtKel->id_kelompok);
 
         $inp = new Proposal();
         $inp->judul = $req->judul;
-        $inp->topik = $req->topik;
+        $inp->jenis = $req->jenis;
         $inp->bidang = $req->bidang;
+        $inp->deskripsi = $req->deskripsi;
         $inp->save();
 
         $kelompok->id_proposal = $inp->id;
@@ -169,14 +177,16 @@ class HomeController extends Controller
         $validatedData = $req->validate([
             'id' => 'required',
             'judul' => 'required',
-            'topik' => 'required',
+            'jenis' => 'required',
             'bidang' => 'required',
+            'deskripsi' => 'required',
         ]);
 
         $inp = Proposal::find($req->id);
         $inp->judul = $req->judul;
-        $inp->topik = $req->topik;
+        $inp->jenis = $req->jenis;
         $inp->bidang = $req->bidang;
+        $inp->deskripsi = $req->deskripsi;
         $inp->save();
 
         return $this->setResponse($inp);
@@ -192,7 +202,7 @@ class HomeController extends Controller
         ]);
         
         $mhs =auth()->guard("web")->user()->id;
-        $dtKel = DB::table("detail_kelompok")->where("id_mahasiswa",$mhs);
+        $dtKel = DB::table("detail_kelompok")->where("id_user",$mhs);
 
         $dtKel = $dtKel->first();
         $kelompok = Kelompok::find($dtKel->id_kelompok);

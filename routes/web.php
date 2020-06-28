@@ -28,38 +28,87 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::middleware('auth:admin')->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::middleware('admin')->group(function () {
     #ROUTE GET
-    Route::get('/home', 'HomeController@index')->name('dashboard');
-    Route::get('/jurusan', 'HomeController@jurusan')->name('manage_jurusan');
-    Route::get('/setKelas', 'HomeController@setKelas')->name('setKelas');
-    Route::get('/tahunajaran', 'HomeController@tahunAjaran')->name('tahunajaran');
+        Route::get('/home', 'HomeController@index')->name('dashboard');
+        Route::get('/jurusan', 'HomeController@jurusan')->name('manage_jurusan');
+        Route::get('/setKelas', 'HomeController@setKelas')->name('setKelas');
+        Route::get('/setDosen', 'HomeController@setDosen')->name('setDosen');
+        Route::get('/tahunajaran', 'HomeController@tahunAjaran')->name('tahunajaran');
+        
+        #ROUTE ADD
+        Route::post("addJurusan","AdminController@addJurusan");
+        Route::post("addTAjaran","AdminController@addTAjaran");
+        Route::post("addKelas","AdminController@addKelas");
+        Route::post("addDosen","AdminController@addDosen");
+        
+        #ROUTE DATAGEN
+        Route::get("jurusanData","AdminController@jurusanData");
+        Route::get("tajaranData","AdminController@tajaranData");
+        Route::get("kelasData","AdminController@kelasData");
+        Route::get("dosenData","AdminController@dosenData");
+        
+        #ROUTE EDIT
+        Route::post("editJurusan","AdminController@editJurusan");
+        Route::post("editTAjaran","AdminController@editTAjaran");
+        Route::post("editKelas","AdminController@editKelas");
+        Route::post("editDosen","AdminController@editDosen");
+        
+        #ROUTE delete
+        Route::post("deleteJurusan","AdminController@deleteJurusan");
+        Route::post("deleteTAjaran","AdminController@deleteTAjaran");
+        Route::post("deleteKelas","AdminController@deleteKelas");
+        Route::post("deleteDosen","AdminController@deleteDosen");
+        
+    });
+    
+    Route::middleware('dosenp')->group(function () {
+        Route::get('/koordb', 'KoorController@index');
+        Route::get('/createPengumuman', 'KoorController@createPengumuman')->name('createPengumuman');
+        
+        Route::post('/addPengumuman', 'KoorController@addPengumuman');
+        
+        Route::post('/editPengumuman', 'KoorController@editPengumuman');
+        
+        Route::post('/deletePengumuman', 'KoorController@deletePengumuman');
+        
+        
+        Route::get('/getPengumuman', 'KoorController@getPengumuman');
+    });
 
-    Route::get('/dataKelompok', 'HomeController@dataKelompok')->name('dataKelompok');
-    Route::get('/dataProposal', 'HomeController@dataProposal')->name('dataProposal');
-    Route::get('/createPengumuman', 'HomeController@createPengumuman')->name('createPengumuman');
-    
-    #ROUTE ADD
-    Route::post("addJurusan","AdminController@addJurusan");
-    Route::post("addTAjaran","AdminController@addTAjaran");
-    Route::post("addKelas","AdminController@addKelas");
-    
-    #ROUTE DATAGEN
-    Route::get("jurusanData","AdminController@jurusanData");
-    Route::get("tajaranData","AdminController@tajaranData");
-    Route::get("kelasData","AdminController@kelasData");
-    
-    #ROUTE EDIT
-    Route::post("editJurusan","AdminController@editJurusan");
-    Route::post("editTAjaran","AdminController@editTAjaran");
-    Route::post("editKelas","AdminController@editKelas");
-    
-    #ROUTE delete
-    Route::post("deleteJurusan","AdminController@deleteJurusan");
-    Route::post("deleteTAjaran","AdminController@deleteTAjaran");
-    Route::post("deleteKelas","AdminController@deleteKelas");
-    
-    
+    Route::middleware('dosen')->group(function () {
+        Route::get('/dosendb', 'DosenController@index');
+        Route::get('/dataKelompok', 'DosenController@dataKelompok')->name('dataKelompok');
+        Route::get('/dataProposal', 'HomeController@dataProposal')->name('dataProposal');
+        Route::get('/createPengumuman', 'DosenController@createPengumuman');
+        
+        Route::post('/addPengumuman', 'DosenController@addPengumuman');
+        
+        Route::post('/editKelompok', 'DosenController@editKelompok');
+        
+        Route::post('/deletePengumuman', 'DosenController@deletePengumuman');
+        
+        
+        Route::get('/getTaughClass/{id}', 'DosenController@getTaughClass');
+        Route::get('/getKelDetail/{id}', 'DosenController@getKelDetail');
+    });
+
+    Route::middleware('Mhs')->group(function () {
+        Route::get('/regis', 'HomeController@regisMhs')->name('regis');
+        Route::get('/uplProposal', 'HomeController@uplProposal')->name('uplProposal');
+        Route::get('/uplBanner', 'HomeController@uplBanner')->name('uplBanner');
+
+
+        Route::post('/addKelompok', 'HomeController@addKelompok');
+        Route::post('/addProposal', 'HomeController@addProposal');
+
+        Route::post('/editProposal', 'HomeController@editProposal');
+        Route::post('/uploadProp', 'HomeController@uploadProp');
+        Route::post('/uploadBanner', 'HomeController@uploadBanner');
+        
+        Route::post('/deleteProp', 'HomeController@deleteProp');
+    });
     
 });
 
@@ -69,25 +118,8 @@ Route::get('/getDosen', 'AdminController@getDosen');
 Route::get('/getKelas', 'AdminController@getKelas');
 Route::get('/getMhs', 'AdminController@getMhs');
 
-Route::middleware('auth:web')->group(function () {
-    Route::get('/regis', 'HomeController@regisMhs')->name('regis');
-    Route::get('/uplProposal', 'HomeController@uplProposal')->name('uplProposal');
-    Route::get('/uplBanner', 'HomeController@uplBanner')->name('uplBanner');
-
-
-    Route::post('/addKelompok', 'HomeController@addKelompok');
-    Route::post('/addProposal', 'HomeController@addProposal');
-
-    Route::post('/editProposal', 'HomeController@editProposal');
-    Route::post('/uploadProp', 'HomeController@uploadProp');
-    Route::post('/uploadBanner', 'HomeController@uploadBanner');
-    
-    Route::post('/deleteProp', 'HomeController@deleteProp');
-});
-
 Route::get('/l', 'HomeController@index')->name('home');
 
 
 Route::get('/datagen/{dataN}/{var?}/{action?}', 'HomeController@dataGen')->name('dataGen');
-Route::get('/orders', 'HomeController@index')->name('order');
 

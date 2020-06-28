@@ -46,7 +46,7 @@
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">×</span></button>
 							<h4 v-if="mdTr == 'add'" class="modal-title">Tambah Kelas</h4>
-							<h4 v-if="mdTr == 'Edit'" class="modal-title">Edit Kelas</h4>
+							<h4 v-if="mdTr == 'edit'" class="modal-title">Edit Kelas</h4>
 						</div>
 						<div class="modal-body">
 							<div :class="Boolean(errors.tahun)? 'form-group has-error' : 'form-group'">

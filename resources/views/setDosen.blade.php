@@ -4,8 +4,8 @@
 <div id="app">
 	<section class="content-header">
 			<h1>
-				Jurusan
-				<small>Setting Jurusan</small>
+				Dosen
+				<small>Setting Dosen</small>
 			</h1>
 	</section>
 
@@ -15,8 +15,8 @@
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-12">
-						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Tambah Jurusan</button>
-							<h3>List Jurusan : </h3>
+						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Tambah Dosen </button>
+							<h3>List Dosen  : </h3>
 							<div v-if="tableLoading" class="fa-5x text-center">
 									<i class="fa fa-spinner fa-spin"></i>
 							</div>
@@ -24,8 +24,10 @@
 							<thead>
 								<tr>
 									<th>No</th>
-									<th>Jurusan</th>
-									<th>Semester Aktif</th>
+									<th>NID</th>
+									<th>Nama</th>
+									<th>Username</th>
+									<th>Role</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -43,13 +45,13 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">×</span></button>
-							<h4 v-if="mdTr == 'add'" class="modal-title">Tambah Jurusan</h4>
-							<h4 v-if="mdTr == 'edit'" class="modal-title">Edit Jurusan</h4>
+							<h4 v-if="mdTr == 'add'" class="modal-title">Tambah Dosen</h4>
+							<h4 v-if="mdTr == 'edit'" class="modal-title">Edit Dosen</h4>
 						</div>
 						<div class="modal-body">
 							<div :class="Boolean(errors.nama)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Nama Jurusan</label>
-								<input type="text"  class="error form-control"  v-model="nama" placeholder="Nama Jurusan">
+								<label for="exampleInputEmail1">Nama</label>
+								<input type="text"  class="error form-control"  v-model="nama" placeholder="Nama">
 								<span v-if="Boolean(errors.nama)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.nama">@{{ item }}</li>
@@ -57,18 +59,62 @@
 								</span>
 							</div>
 
-							<div :class="Boolean(errors.semester_aktif)? 'form-group has-error' : 'form-group'">
-								<label for="exampleInputEmail1">Semester Aktif</label>
-								<select class="error form-control" v-model="semester_aktif" placeholder="Semester Aktif">
-									<option value="1">Ganjil</option>
-									<option value="2">Genap</option>
-								</select>
-								<span v-if="Boolean(errors.semester_aktif)"class="help-block">
+							<div :class="Boolean(errors.nid)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">NID</label>
+								<input type="text"  class="error form-control"  v-model="nid" placeholder="NID">
+								<span v-if="Boolean(errors.nid)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.semester_aktif">@{{ item }}</li>
+										<li v-for="(item,index) in errors.nid">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
+
+							<div :class="Boolean(errors.email)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputEmail1">Email</label>
+								<input type="text"  class="error form-control"  v-model="email" placeholder="Email">
+								<span v-if="Boolean(errors.email)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.email">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+
+							<div :class="Boolean(errors.username)? 'form-group has-error' : 'form-group'">
+								<label >Username</label>
+								<input type="text"  class="error form-control"  v-model="username" placeholder="Username">
+								<span v-if="Boolean(errors.username)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.username">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+
+							<div :class="Boolean(errors.password)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputpassword1">Password</label>
+								<input type="password"  class="error form-control"  v-model="password" placeholder="Password">
+								<span v-if="Boolean(errors.password)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.password">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
+							<div :class="Boolean(errors.role)? 'form-group has-error' : 'form-group'">
+								<label for="exampleInputrole1">Role</label>
+								<select class="error form-control"  v-model="role" placeholder="Role">
+									<option value="3">Dosen Pengajar</option>
+									<option value="2">Koordinator KWU</option>
+								</select>
+
+								<span v-if="Boolean(errors.role)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.role">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+
 
 							<div v-if="Boolean(errors.error)" class="alert alert-danger">
 								<h4><i class="icon fa fa-danger"></i> Error !</h4>
@@ -120,7 +166,11 @@ var app = new Vue({
 		dt : 0,
 		dtTb : {},
 		nama : '',
-		semester_aktif : '1',
+		nid : '',
+		email : '',
+		role : '3',
+		username : '',
+		password : '',
 		errors: {},
 		dtId : '',
 		mdTr : '',
@@ -133,7 +183,11 @@ var app = new Vue({
 			if(tr == "add"){
 				$('#modal-default').modal('show')
 				this.nama = ''
-				this.semester_aktif = '1'
+				this.nid = ''
+				this.username =''
+				this.password = ''
+				this.role = '3'
+				this.email = ''
 				this.errors = {}
 			}
 			else if(tr == 'edit'){
@@ -143,9 +197,13 @@ var app = new Vue({
 		},
 		editData : function(id) {
 			let d = this.getDataById(id) 
-			this.nama = d.nama
 			this.dtId = d.id
-			this.semester_aktif = d.semester_aktif
+			this.nama = d.nama
+			this.nid = d.nomor
+			this.username = d.username
+			this.password = ''
+			this.role = d.role
+			this.email = d.email
 			this.errors = {}
 			this.modalOpen('edit')
 
@@ -154,10 +212,14 @@ var app = new Vue({
 			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
 		},
 		editHandler : function() {
-			axios.post('{{ url("editJurusan") }}',{
+			axios.post('{{ url("editDosen") }}',{
 				id : this.dtId,
 				nama : this.nama,
-				semester_aktif : this.semester_aktif
+				nid : this.nid,
+				username : this.username,
+				password : this.password,
+				role : this.role,
+				email : this.email,
 			})
 			.then(function (response) {
 				// console.log(response)
@@ -175,9 +237,13 @@ var app = new Vue({
 		},
 		saveHandler : function (){
 			
-			axios.post('{{ url("addJurusan") }}',{
+			axios.post('{{ url("addDosen") }}',{
 				nama : this.nama,
-				semester_aktif : this.semester_aktif
+				nid : this.nid,
+				username : this.username,
+				password : this.password,
+				role : this.role,
+				email : this.email,
 			})
 			.then(function (response) {
 				// console.log(response)
@@ -203,7 +269,7 @@ var app = new Vue({
 			.then(async (confirmed) => {
 				if (confirmed) {
 					await $.ajax({
-						url : "{{ url('deleteJurusan') }}",
+						url : "{{ url('deleteDosen') }}",
 						method : "POST",
 						dataType : "JSON",
 						data : {"id" : id},
@@ -232,7 +298,7 @@ var app = new Vue({
 				processing: true,
 				serverSide: true,
 				ajax: {
-						url : '{{ url("jurusanData") }}',
+						url : '{{ url("dosenData") }}',
 						type: "GET",
 						dataType: "JSON",
 						complete : function(d){
@@ -242,8 +308,10 @@ var app = new Vue({
 				},
 				columns: [
 							{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
+							{ data: 'nomor', name: 'nomor' },
 							{ data: 'nama', name: 'nama' },
-							{ data: 'semester_act', name: 'semester_act' },
+							{ data: 'username', name: 'username' },
+							{ data: 'role_text', name: 'role_text' },
 							{ data: 'action', name: 'action' },
 				]
 				});

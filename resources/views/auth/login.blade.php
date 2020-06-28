@@ -30,12 +30,12 @@
         {{ csrf_field() }}
         <div class="form-group has-feedback">
        
-            <input type="username" name="nim" value="{{ old("nim") }}" class="form-control" placeholder="NIM">
+            <input type="username" name="username" value="{{ old("username") }}" class="form-control" placeholder="Username">
          
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-          <input type="password" name="password" class="form-control" placeholder="PIN">
+          <input type="password" name="password" class="form-control" placeholder="Password">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="row">
@@ -47,7 +47,7 @@
         </div>
       </form>
       <br>
-      {{-- <a href="{{ route("register") }}" class="btn btn-primary btn-flat" style="width:100% !important">Register a new membership</a> --}}
+      <a href="{{ route("register") }}" class="btn btn-primary btn-flat" style="width:100% !important">Daftar Akun Baru</a>
   
     </div>
 @endsection

@@ -15,10 +15,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $table = 'mahasiswa';
 
     protected $fillable = [
-        'nama', 'nim', 'email', 'alamat','jenis_kelamin'
+        'nama', 'nomor', 'email', 'alamat','jenis_kelamin','password','username'
     ];
 
     /**
@@ -27,9 +26,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'pin', 'remember_token',
+        'password', 'remember_token',
     ];
 
+    protected $appends = ["role_text"];
     /**
      * The attributes that should be cast to native types.
      *
@@ -39,12 +39,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getAuthPassword(){  
-        return bcrypt($this->pin);
-    }
-    
-    public function setPasswordAttribute($value)
+    public function getRoleTextAttribute()
     {
-        $this->attributes['password'] = $value;
+        switch($this->role){
+            case "1" : 
+                return "Admin";
+            case "2" : 
+                return "Koordinator KWU";
+            case "3" : 
+                return "Dosen Pengajar";
+            case "4" : 
+                return "Mahasiswa";
+        }
     }
 }

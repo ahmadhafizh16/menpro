@@ -20,16 +20,14 @@
 						@else
 						<button class="btn btn-info" @click="editData({{ $kelompok->id_proposal }})"><i class="fa fa-plus"></i> Edit Data Proposal</button>
 						@endif
-							<h3>  </h3>
-							<div v-if="tableLoading" class="fa-5x text-center">
-									<i class="fa fa-spinner fa-spin"></i>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									@if(empty($kelompok->id_proposal))
+						
+						<div class="row">
+							<div class="col-md-12">
+								@if(empty($kelompok->id_proposal))
 									<h2 class="text-center"> Belum input data proposal</h2>
-									</hr>
-									@else
+								</hr>
+								@else
+								<h3> Data Proposal </h3>
 									<table class="table " style="font-size:16px;width:50%">
 										<tbody>
 										<tr>
@@ -37,13 +35,17 @@
 											<td>: {{ $kelompok->proposal->judul }}</td>
 										</tr>
 										<tr>
-											<td><b>Topik</b></td>
-											<td>: {{ $kelompok->proposal->topik }}</td>
+											<td><b>jenis</b></td>
+											<td>: {{ ucfirst($kelompok->proposal->jenis) }}</td>
 										</tr>
 										<tr>
 											<td><b>Bidang</b></td>
-											<td>: {{ $kelompok->proposal->bidang }}</td>
-										</tr>				
+											<td>: {{ ucfirst($kelompok->proposal->bidang) }}</td>
+										</tr>	
+										<tr>
+											<td><b>Deskripsi</b></td>
+											<td> {!! $kelompok->proposal->deskripsi !!}</td>
+										</tr>					
 									  </tbody>
 									@endif
 									</table>
@@ -109,22 +111,43 @@
 								</span>
 							</div>
 
-							<div :class="Boolean(errors.topik)? 'form-group has-error' : 'form-group'">
-								<label >Topik</label>
-								<input type="text"  class="error form-control"  v-model="topik" placeholder="Topik">
-								<span v-if="Boolean(errors.topik)"class="help-block">
+							<div :class="Boolean(errors.jenis)? 'form-group has-error' : 'form-group'">
+								<label >Jenis</label>
+								<select class="error form-control" v-model="jenis" placeholder="Jenis">
+									<option value="jasa">Jasa</option>
+									<option value="produk">Produk</option>
+								</select>
+								<span v-if="Boolean(errors.jenis)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.topik">@{{ item }}</li>
+										<li v-for="(item,index) in errors.jenis">@{{ item }}</li>
+									</ul>
+								</span>
+							</div>
+							
+
+							<div :class="Boolean(errors.bidang)? 'form-group has-error' : 'form-group'">
+								<label >Bidang</label>
+								<select class="error form-control" v-model="bidang" placeholder="Bidang">
+									<option value="informatika">Informatika</option>
+									<option value="life style">Life style</option>
+									<option value="elektronika">Elektronika</option>
+									<option value="kuliner">Kuliner</option>
+									<option value="agrobisnis">Agrobisnis</option>
+								</select>
+								<span v-if="Boolean(errors.bidang)"class="help-block">
+									<ul>
+										<li v-for="(item,index) in errors.bidang">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
 
-							<div :class="Boolean(errors.bidang)? 'form-group has-error' : 'form-group'">
-								<label >Bidang</label>
-								<input type="text"  class="error form-control"  v-model="bidang" placeholder="Bidang">
-								<span v-if="Boolean(errors.bidang)"class="help-block">
+							<div :class="Boolean(errors.deskripsi)? 'form-group has-error' : 'form-group'">
+								<label>Deskripsi</label>
+								{{-- <input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Nama Jurusan"> --}}
+								<textarea id="texta" v-model="deskripsi">@{{ deskripsi }}</textarea>
+								<span v-if="Boolean(errors.deskripsi)"class="help-block">
 									<ul>
-										<li v-for="(item,index) in errors.bidang">@{{ item }}</li>
+										<li v-for="(item,index) in errors.deskripsi">@{{ item }}</li>
 									</ul>
 								</span>
 							</div>
@@ -173,7 +196,7 @@
 						</div>
 
 						<div :class="Boolean(errors.file)? 'form-group has-error' : 'form-group'">
-							<label >file</label>
+							<label >File proposal</label>
 							<input type="file"  class="error form-control" ref="file" @change="fileHandler()" placeholder="file" accept=".doc,.docx,.pdf">
 							<span v-if="Boolean(errors.file)"class="help-block">
 								<ul>
@@ -207,10 +230,15 @@
 </div>
 	<!-- /.content -->
 @endsection
+@section('style')
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+@endsection
 
 @section('script')
 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
 <script>
+	
 
 function deleteDt(id){
 	app.deleteHandler(id);
@@ -231,9 +259,14 @@ var app = new Vue({
 		file : undefined,
 		judul : '',
 		judulFile : '',
+		@if(!empty($kelompok->id_proposal))
+		deskripsi : '{!! $kelompok->proposal->deskripsi !!}',
+		@else
+		deskripsi : '',
+		@endif
 		keterangan : '',
-		topik : '',
-		bidang : '',
+		jenis : 'jasa',
+		bidang : 'informatika',
 		kelas : '',
 		errors: {},
 		dtId : '',
@@ -247,8 +280,9 @@ var app = new Vue({
 			if(tr == "add"){
 				$('#modal-default').modal('show')
 				this.judul = ''
-				this.topik = ''
-				this.bidang = ''
+				this.deskripsi = ''
+				this.jenis = 'jasa'
+				this.bidang = 'informatika'
 				this.errors = {}
 			}
 			else if(tr == 'edit'){
@@ -259,7 +293,7 @@ var app = new Vue({
 		editData : function(id) {
 			@if(!empty($kelompok->id_proposal))
 			this.judul = '{{ $kelompok->proposal->judul }}'
-			this.topik = '{{ $kelompok->proposal->topik }}'
+			this.jenis = '{{ $kelompok->proposal->jenis }}'
 			this.bidang = '{{ $kelompok->proposal->bidang }}'
 			@endif
 			this.dtId = id
@@ -270,10 +304,12 @@ var app = new Vue({
 			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
 		},
 		editHandler : function() {
+			this.deskripsi = $("#texta").summernote("code")
 			axios.post('{{ url("editProposal") }}',{
 				id : this.dtId,
 				judul : this.judul,
-				topik : this.topik,
+				jenis : this.jenis,
+				deskripsi : this.deskripsi,
 				bidang : this.bidang,	
 			})
 			.then(function (response) {
@@ -291,7 +327,6 @@ var app = new Vue({
 			})
 		},
 		fileHandler : function(){
-			console.log(this.$refs.file.files[0])
 			this.file = this.$refs.file.files[0]
 		},
 		uploadHandler : function(){
@@ -323,10 +358,11 @@ var app = new Vue({
 			// console.log(this.$refs.file.files[0])
 		},
 		saveHandler : function (){
-			
+			this.deskripsi = $("#texta").summernote("code")
 			axios.post('{{ url("addProposal") }}',{
 				judul : this.judul,
-				topik : this.topik,
+				jenis : this.jenis,
+				deskripsi : this.deskripsi,
 				bidang : this.bidang,		
 			})
 			.then(function (response) {
@@ -376,7 +412,14 @@ var app = new Vue({
 		},
 	},
 	async mounted() {
-	
+		$('#texta').summernote({
+			height : 200,
+			placeholder : "Deskripsi proposal",
+			toolbar: [
+			['font', ['bold', 'underline', 'clear']],
+			['para', ['ul', 'ol', 'paragraph']],
+			]
+		});
 	},
 	watch : {
 		

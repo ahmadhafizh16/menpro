@@ -91,6 +91,10 @@
 @section('script')
 
 <script>
+	@if(is_null($prop))
+		alert("Belum Input data proposal !")
+		window.location = "{{ url('/uplProposal') }}"
+	@endif
 function reloadTable(id){
 	app.reloadTable(id);
 }
@@ -111,7 +115,9 @@ var app = new Vue({
 			
 			let formData = new FormData()
 			formData.append('file', this.file);
+			@if(!is_null($prop))
 			formData.append('id', '{{ $prop->id }}');
+			@endif
 
 			axios.post( '{{ url('/uploadBanner') }}',
 						formData,

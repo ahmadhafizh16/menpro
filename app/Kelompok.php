@@ -12,12 +12,17 @@ class Kelompok extends Model
 
     public function mhs()
     {
-        return $this->belongsToMany('App\User', 'detail_kelompok', 'id_kelompok', 'id_mahasiswa');
+        return $this->belongsToMany('App\User', 'detail_kelompok', 'id_kelompok', 'id_user');
     }
 
     public function dosen()
     {
-        return $this->belongsTo("App\Dosen","id_dosbing");
+        return $this->belongsTo("App\User","id_dosbing");
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo("App\Kelas","id_kelas");
     }
 
     public function proposal()

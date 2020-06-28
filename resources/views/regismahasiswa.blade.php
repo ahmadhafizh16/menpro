@@ -32,18 +32,18 @@
 										<td>
 										@foreach ($kelompok->mhs()->get() as $mhs)
 											
-										 • [{{ $mhs->nim }}] {{ $mhs->nama }}<br>
+										 • [{{ $mhs->nomor }}] {{ $mhs->nama }}<br>
 										
 										@endforeach
 									</td>
 									</tr>
 									<tr>
 										<td><b>Dosen Pembimbing</b></td>
-										<td>:[{{ $kelompok->dosen->nid }}] {{ $kelompok->dosen->nama }}</td>
+										<td>: [{{ $kelompok->dosen->nomor }}] {{ $kelompok->dosen->nama }}</td>
 									</tr>
 									<tr>
 										<td><b>Kelas</b></td>
-										<td>: [IF20201A] Informatika A</td>
+										<td>: {{ $kelompok->kelas->jurusan->nama }} [{{  $kelompok->kelas->kelas }}]</td>
 									</tr>
 									
 								  </tbody>
@@ -71,27 +71,41 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-12">
-								<table class="table " style="font-size:16px;">
+								@if(empty($kelompok->id_proposal))
+								<h2 class="text-center"> Belum Input Data Proposal</h2>
+								@else
+
+								<div class="text-center col-md-4">
+									@if(empty($kelompok->proposal->banner))
+									<img src="{{ asset("images/noimg.png") }}" style="width:240px;border:1px solid #ccc;">
+									@else
+									<img src="{{ asset($kelompok->proposal->banner) }}" style="width:240px;border:1px solid #ccc;">
+									@endif
+								</div>
+								<div class="col-md-6">
+								<h3> Data Proposal </h3>
+								<table class="table " style="font-size:16px;width:100%">
 									<tbody>
 									<tr>
 										<td><b>Judul</b></td>
-										<td>: Aplikasi Parkir Berbasis Web</td>
+										<td>: {{ $kelompok->proposal->judul }}</td>
 									</tr>
 									<tr>
-										<td><b>Topik</b></td>
-										<td>: Topik Proposal</td>
+										<td><b>jenis</b></td>
+										<td>: {{ ucfirst($kelompok->proposal->jenis) }}</td>
 									</tr>
 									<tr>
 										<td><b>Bidang</b></td>
-										<td>: Informatika</td>
-									</tr>
+										<td>: {{ ucfirst($kelompok->proposal->bidang) }}</td>
+									</tr>	
 									<tr>
-										<td><b>Status Laporan Akhir</b></td>
-										<td>: Belum Mengumpulkan</td>
-									</tr>
-									
+										<td><b>Deskripsi</b></td>
+										<td> {!! $kelompok->proposal->deskripsi !!}</td>
+									</tr>					
 								  </tbody>
 								</table>
+							</div>
+								@endif
 							</div>
 						</div>
 						<div class="ajax-content">
@@ -107,90 +121,57 @@
 		</div>
 		
 			<h2>
-				Histori Upload Proposal & Banner
+				Histori Upload Proposal
 				<small></small>
 			</h2>
+			
 		
+		@if(!$isUploaded->isEmpty())
 		<ul class="timeline">
-
+			@php
+			$col = ["maroon","green","blue","yellow","teal","purple","navy","maroon","red","green","blue","yellow","teal","purple","navy","maroon"];
+			@endphp
 			<!-- timeline time label -->
+			@foreach ($isUploaded as $k => $v)
+				
 			<li class="time-label">
-				<span class="bg-red">
-					10 Feb. 2020
+				<span class="bg-{{ $col[$k] }}"  style="padding:5px 15px">
+					{{ $v->upl_date }} 
 				</span>
 			</li>
 			<!-- /.timeline-label -->
-		
+			
 			<!-- timeline item -->
 			<li>
 				<!-- timeline icon -->
 				<i class="fa fa-file bg-blue"></i>
 				<div class="timeline-item">
-					<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-		
-					<h3 class="timeline-header"><a href="#">Upload Proposal Revisi 4</a></h3>
-		
-					<div class="timeline-body">
-						Revisi SWOT Dan Neraca
-					</div>
-		
+					<span class="time"><i class="fa fa-clock-o"></i> {{ $v->upl_time }} </span>
 					
-				</div>
-			</li>
-
-			<li class="time-label">
-				<span class="bg-green">
-					1 Feb. 2020
-				</span>
-			</li>
-			<!-- /.timeline-label -->
-		
-			<!-- timeline item -->
-			<li>
-				<!-- timeline icon -->
-				<i class="fa fa-file bg-blue"></i>
-				<div class="timeline-item">
-					<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-		
-					<h3 class="timeline-header"><a href="#">Upload Proposal Revisi 3</a></h3>
-		
-					<div class="timeline-body">
-						Revisi Tujuan Pasar dan Cash Flow
-					</div>
-		
+					<h3 class="timeline-header"><a href="#">{{ $v->judul_file }}</a></h3>
 					
-				</div>
-			</li>
-
-			<li class="time-label">
-				<span class="bg-blue">
-					20 Jan. 2020
-				</span>
-			</li>
-			<!-- /.timeline-label -->
-		
-			<!-- timeline item -->
-			<li>
-				<!-- timeline icon -->
-				<i class="fa fa-file bg-blue"></i>
-				<div class="timeline-item">
-					<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-		
-					<h3 class="timeline-header"><a href="#">Upload Proposal Revisi 2</a></h3>
-		
 					<div class="timeline-body">
-						Revisi Latar Belakang
+						{{ $v->keterangan }}
 					</div>
-		
+					
 					
 				</div>
 			</li>
 			<!-- END timeline item -->
+			@endforeach
 			<li>
 				<i class="fa fa-clock-o bg-gray"></i>
+				
 			</li>
-		
+			
 		</ul>
+		@else
+		<h4>
+			Belum pernah upload proposal
+			<small></small>
+		</h4>
+		@endif
+
 		<div class="modal fade in" id="modal-default">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -209,14 +190,15 @@
 								</ul>
 							</span>
 						</div>
-						<div class="form-group">
+						<div :class="Boolean(errors.kel)? 'form-group has-error' : 'form-group'">
 							<label for="">Anggota Kelompok</label><br>
-							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" style="width:100% !important;">
-								<option></option>
+							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" data-placeholder="Pilih 2 anggota kelompok" style="width:100% !important;">
 							</select>
-							<span v-if="Boolean(errors.name)"class="help-block">
+							<small v-if="kelTr">Pilih 1 anggota lagi</small>
+							{{-- <span --}}
+							<span v-if="Boolean(errors.kel)"class="help-block">
 								<ul>
-									<li v-for="(item,index) in errors.name">@{{ item }}</li>
+									<li v-for="(item,index) in errors.kel">@{{ item }}</li>
 								</ul>
 							</span>
 						</div>
@@ -281,6 +263,7 @@ var app = new Vue({
 		dtTb : {},
 		nama_kel : '',
 		kel : [],
+		kelTr : false,
 		dosen : '',
 		kelas : '',
 		errors: {},
@@ -331,7 +314,7 @@ var app = new Vue({
 				dosen : this.dosen
 			})
 			.then(function (response) {
-				// console.log(response)
+				console.log(response)
 				app.errors = {}
 				window.location.reload()
 			})
@@ -438,10 +421,15 @@ var app = new Vue({
 			axios.get('{{ url("getMhs") }}')
 			.then(function (response) {
 				$('.select2mhs').select2({
-					placeholder: "Pilih Anggota",
 					data : response.data.data,
-					maximumSelectionLength: 3
+					maximumSelectionLength: 2,
+					allowClear: true
 				});
+				setTimeout(function(){
+					$(".select2-search__field").css({"width":"100%"});
+					$(".select2-search__field").css({"padding-left":"15px"});
+				},400)
+
 			})
 			.catch(function (error) {
 				if(Boolean(error.response.data.errors)){
@@ -460,11 +448,13 @@ var app = new Vue({
 		// await this.createDataTable();
 	},
 	watch : {
-		orderType : async function(){
-			this.dt.destroy();
-			this.tableLoading = true
-			await this.createDataTable();
-			this.tableLoading = false
+		kel : function(){
+			if(this.kel.length == 1){
+				this.kelTr = true
+			}
+			else{
+				this.kelTr = false
+			}
 		}
 	}
 })

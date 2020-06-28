@@ -12,7 +12,7 @@ class Kelas extends Model
 
     public function dosen()
     {
-        return $this->belongsTo('App\Dosen', 'id_dosen');
+        return $this->belongsTo('App\User', 'id_user');
     }
 
     public function tahun()

@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+
 
     /**
      * Create a new controller instance.
@@ -34,10 +34,23 @@ class LoginController extends Controller
      * @return void
      */
     public function username(){
-        return 'nim';
+        return 'username';
     }
 
-    
+    public function authenticated($request , $user){
+        // dd($user);
+        switch ($user->role){
+          case '1':
+                return redirect("/home");
+          case '2':
+                return redirect("/koordb");
+          case '3':
+                return redirect("/dosendb");
+          case '4':
+                return redirect("/regis");
+        }
+      }
+
 
     public function __construct()
     {
