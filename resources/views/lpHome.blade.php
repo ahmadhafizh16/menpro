@@ -4,14 +4,13 @@
 <section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg">
     <div class="overlay-bg overlay"></div>
     <div class="container">
-      <div class="row fullscreen">
-        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12">
+      <div class="row ">
+        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 16% auto 9% auto !important; ">
           <h1>
             Sistem Manajemen<br>
             Hari Kewirausahaan Itenas.								
           </h1>
-        <a href="{{url("/login")}}" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60" style="posisiton:relative;left:-700px;top:50px;">Login Mahasiswa </a>
-          <a href="{{url("admin-login")}}" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60" style="posisiton:relative;left:-700px;top:50px;">Login Dosen </a>
+      
         </div>	
         <div class="head-bottom-meta d-flex justify-content-between align-items-end col-lg-12">
           <div class="col-lg-6 flex-row d-flex meta-left no-padding">

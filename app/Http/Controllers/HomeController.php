@@ -51,6 +51,9 @@ class HomeController extends Controller
     public function setKelas()
     {
         $ta = TA::where("isActive",1)->first();
+        if(is_null($ta)){
+            return "<script>alert('Mohon input tahun ajaran terlebih dahulu'); window.location = '".url("/tahunajaran")."'</script>";
+        }
         return view('kelas',compact("ta"));
     }
 
