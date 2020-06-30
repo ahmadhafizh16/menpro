@@ -32,7 +32,7 @@
     <header class="default-header">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="{{ url("/") }}">
               <img src="{{asset("images/logoz.png")}}" alt="" style="width:34px;"> Kewirausahaan
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,12 +41,14 @@
 
             <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarSupportedContent">
               <ul class="navbar-nav">
-              <li><a href="#home">Home</a></li>
+              <li><a href="{{ url("/") }}">Home</a></li>
               <li><a href="#news">Pengumuman</a></li>
               <li><a href="#travel">Proposal</a></li>
               
               <li><a href="#team">Tim Dosen</a></li>
+              @if(!Auth::check())
               <li><a href="{{ url("login") }}">Log In</a></li>
+              @endif
               <!-- Dropdown -->
                 {{-- <li class="dropdown">
                   <a class="dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -108,8 +110,10 @@
     <script src="{{asset("blog/js/jquery.ajaxchimp.min.js")}}"></script>
     <script src="{{asset("blog/js/parallax.min.js")}}"></script>			
     <script src="{{asset("blog/js/owl.carousel.min.js")}}"></script>		
+    <script src="{{ asset("dist/js/vue.js") }}"></script>
     <script src="{{asset("blog/js/jquery.magnific-popup.min.js")}}"></script>				
     <script src="{{asset("blog/js/jquery.sticky.js")}}"></script>
     <script src="{{asset("blog/js/main.js")}}"></script>	
+    @yield("script")
   </body>
 </html>

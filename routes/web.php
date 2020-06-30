@@ -11,13 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view("lpHome");
-});
+Route::get('/', "HomeController@lpHome");
 
-Route::get('/news', function () {
-    return view("lpNews");
-});
+Route::get('/news/{id}',"HomeController@news");
 
 Auth::routes();
 Route::post('admin-login', ['as' => 'admin-login', 'uses' => 'Auth\AdminLoginController@login']);
@@ -80,15 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('dosen')->group(function () {
         Route::get('/dosendb', 'DosenController@index');
         Route::get('/dataKelompok', 'DosenController@dataKelompok')->name('dataKelompok');
-        Route::get('/dataProposal', 'HomeController@dataProposal')->name('dataProposal');
-        Route::get('/createPengumuman', 'DosenController@createPengumuman');
-        
-        Route::post('/addPengumuman', 'DosenController@addPengumuman');
         
         Route::post('/editKelompok', 'DosenController@editKelompok');
-        
-        Route::post('/deletePengumuman', 'DosenController@deletePengumuman');
-        
         
         Route::get('/getTaughClass/{id}', 'DosenController@getTaughClass');
         Route::get('/getKelDetail/{id}', 'DosenController@getKelDetail');

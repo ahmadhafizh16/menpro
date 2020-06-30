@@ -33,26 +33,18 @@
         <div class="menu-content pb-70 col-lg-8">
           <div class="title text-center">
             <h1 class="mb-10">Pengumuman Terbaru Kewirausahaan Itenas</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.</p>
           </div>
         </div>
       </div>						
       <div class="active-cat-carusel">
+        @foreach ($peng as $p)
         <div class="item single-cat">
-          <img src="{{asset("blog/img/c1.jpg")}}" alt="">
-          <p class="date">10 Jan 2018</p>
-        <h4><a href="{{url("/news")}}">Pengumpulan Revisi Proposal #3</a></h4>
+          <img src="{{asset("$p->thumbnail")}}" alt="">
+          <p class="date">{{ $p->upl_date }}</p>
+          <h4><a href="{{url("/news/".$p->id)}}">{{ $p->judul }}</a></h4>
         </div>
-        <div class="item single-cat">
-          <img src="{{asset("blog/img/c2.jpg")}}" alt="">
-          <p class="date">10 Jan 2018</p>
-          <h4><a href="{{url("/news")}}">Pengumpulan Revisi Proposal #2</a></h4>
-        </div>
-        <div class="item single-cat">
-          <img src="{{asset("blog/img/c3.jpg")}}" alt="">
-          <p class="date">10 Jan 2018</p>
-          <h4><a href="{{url("/news")}}">Jadwal Kuliah Tamu</a></h4>
-        </div>							
+        @endforeach
+      							
       </div>												
     </div>	
   </section>
@@ -71,64 +63,60 @@
       </div>						
       <div class="row">
         <div class="col-lg-6 travel-left">
+          @foreach ($prop1 as $p1)
           <div class="single-travel media pb-70">
-            <img class="img-fluid d-flex  mr-3" src="{{asset("blog/img/t1.jpg")}}" alt="">
+            <img class="img-fluid d-flex  mr-3" src="{{asset("$p1->banner")}}" alt="" style="width:200px;height:300px;">
             <div class="dates">
-              <span>20</span>
-              <p>Dec</p>
+              <span>{{ explode(" ",$p1->historyLatest()->first()->upl_date)[0] }}</span>
+              <p>{{ explode(" ",$p1->historyLatest()->first()->upl_date)[1] }}</p>
             </div>
-            <div class="media-body align-self-center">
-              <h4 class="mt-0"><a href="#">Aplikasi Penunjuk Arah Pendaki</a></h4>
-              <p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
-            <div class="meta-bottom d-flex justify-content-between">
-              
-            </div>							 
+            <div class="media-body">
+              <h4 class="mt-0"><a href="#">{{ $p1->judul }}</a></h4>
+              <p>
+                <a class="btn btn-info" style="color:white;padding : 2px 10px !important;">{{ ucfirst($p1->jenis) }}</a>
+                <a class="btn btn-success" style="color:white;padding : 2px 10px !important;">{{ ucfirst($p1->bidang) }}</a>
+              </p>
+              <p>Nama Kelompok : {{ $p1->kelompok->nama_kel }}</p>
+              <p>Nama Jurusan : {{ $p1->kelompok->kelas->jurusan->nama }}</p>
+              <p>Nama Anggota :</p>
+              @foreach ($p1->kelompok->mhs()->get() as $kel)
+                  <p>- [{{ $kel->nomor }}] {{ $kel->nama }}</p>
+              @endforeach
+              <div class="meta-bottom d-flex justify-content-between">
+                
+              </div>							 
             </div>
           </div>
-          <div class="single-travel media">
-            <img class="img-fluid d-flex  mr-3" src="{{asset("blog/img/t3.jpg")}}" alt="">
-            <div class="dates">
-              <span>20</span>
-              <p>Dec</p>
-            </div>							  
-            <div class="media-body align-self-center">
-              <h4 class="mt-0"><a href="#">Aplikasi Pengukur Suhu</a></h4>
-              <p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
-            <div class="meta-bottom d-flex justify-content-between">
-              
-            </div>							 
-            </div>
-          </div>														
+          @endforeach
+         						
         </div>
         <div class="col-lg-6 travel-right">
+          @foreach ($prop2 as $p2)
           <div class="single-travel media pb-70">
-            <img class="img-fluid d-flex  mr-3" src="{{asset("blog/img/t2.jpg")}}" alt="">
+            <img class="img-fluid d-flex  mr-3" src="{{asset("$p2->banner")}}" alt="" style="width:200px;height:300px;">
             <div class="dates">
-              <span>20</span>
-              <p>Dec</p>
-            </div>							  
-            <div class="media-body align-self-center">
-              <h4 class="mt-0"><a href="#">Aplikasi Image Enhancer</a></h4>
-              <p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
-            <div class="meta-bottom d-flex justify-content-between">
-              
-            </div>							 
+              <span>{{ explode(" ",$p2->historyLatest()->first()->upl_date)[0] }}</span>
+              <p>{{ explode(" ",$p2->historyLatest()->first()->upl_date)[1] }}</p>
+            </div>
+            <div class="media-body">
+              <h4 class="mt-0"><a href="#">{{ $p2->judul }}</a></h4>
+              <p>
+                <a class="btn btn-info" style="color:white;padding : 2px 10px !important;">{{ ucfirst($p2->jenis) }}</a>
+                <a class="btn btn-success" style="color:white;padding : 2px 10px !important;">{{ ucfirst($p2->bidang) }}</a>
+              </p>
+              <p>Nama Kelompok : {{ $p2->kelompok->nama_kel }}</p>
+              <p>Nama Jurusan : {{ $p2->kelompok->kelas->jurusan->nama }}</p>
+              <p>Nama Anggota :</p>
+              @foreach ($p2->kelompok->mhs()->get() as $kel)
+                  <p>- [{{ $kel->nomor }}] {{ $kel->nama }}</p>
+              @endforeach
+              <div class="meta-bottom d-flex justify-content-between">
+                
+              </div>							 
             </div>
           </div>
-          <div class="single-travel media">
-            <img class="img-fluid d-flex  mr-3" src="{{asset("blog/img/t4.jpg")}}" alt="">
-            <div class="dates">
-              <span>20</span>
-              <p>Dec</p>
-            </div>							  
-            <div class="media-body align-self-center">
-              <h4 class="mt-0"><a href="#">Aplikasi Menghitung Budget Traveling</a></h4>
-              <p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
-            <div class="meta-bottom d-flex justify-content-between">
-              
-            </div>							 
-            </div>
-          </div>								
+          @endforeach
+          				
         </div>
         <a href="#" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60">Load More </a>		
       </div>

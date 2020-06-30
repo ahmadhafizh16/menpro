@@ -6,7 +6,9 @@ use DB;
 use Auth;
 use DataTables;
 use App\Kelompok;
+use App\User;
 use App\Proposal;
+use App\Pengumuman;
 use App\ProposalHistory;
 use App\TahunAjaran as TA;
 use Illuminate\Http\Request;
@@ -34,8 +36,24 @@ class HomeController extends Controller
         return view('home');
     }
     
-    public function landingPage(){
-        return view('landingPage');
+    public function lpHome(){
+        $peng = Pengumuman::orderBy("created_at","desc")->get();
+        $prop1 = Proposal::whereIn('id',function($query) {
+                                        $query->select('id_proposal')->from('proposal_history');
+                                    })
+                                    ->where("banner","!=","null")->orderBy("id","desc")->limit(2)->get();
+        $prop2 = Proposal::whereIn('id',function($query) {
+                                        $query->select('id_proposal')->from('proposal_history');
+                                    })
+                                    ->where("banner","!=","null")->orderBy("id","desc")->offset(2)->limit(2)->get();
+        
+        return view('lpHome',compact("peng","prop1","prop2"));
+    }
+
+    public function news($id)
+    {
+        $pen = Pengumuman::findOrFail($id);
+        return view('lpNews',compact("pen"));
     }
 
     public function jurusan()

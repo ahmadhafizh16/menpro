@@ -4,7 +4,7 @@
 <div id="app">
 	<section class="content-header">
 			<h1>
-				Upload Proposal
+				Pengumuman
 				<small></small>
 			</h1>
 	</section>
@@ -16,12 +16,12 @@
 				<div class="row">
 					<div class="col-md-12">
 						
-						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Upload Data Proposal</button>
+						<button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Buat Pengumuman</button>
 						
 						
 						<div class="row">
 							<div class="col-md-12">
-								<h3>List Jurusan : </h3>
+								<h3>Data Pengumuman : </h3>
 								<div v-if="tableLoading" class="fa-5x text-center">
 										<i class="fa fa-spinner fa-spin"></i>
 								</div>
@@ -190,7 +190,7 @@ var app = new Vue({
 		tableLoading : false
 	},
 	methods: {
-		modalOpen : function(tr) {
+		modalOpen : async function(tr) {
 			$("#hiide").hide()
 			$("#ld").show()
 			this.mdTr = tr
@@ -201,7 +201,11 @@ var app = new Vue({
 				this.isi = ''
 				this.file = ''
 				this.errors = {}
-				this.initNote()
+				await $('#modal-default').on('shown.bs.modal', function () {
+					app.initNote()
+					$("#ld").hide()
+					$("#hiide").show()
+				})
 			}
 			else if(tr == 'edit'){
 				$('#modal-default').modal('show')

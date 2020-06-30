@@ -8,16 +8,16 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="single-page-post">
-                            <img class="img-fluid" src="{{asset("blog/img/itens.jpg")}}" alt="">
+                            <img class="img-fluid" src="{{asset("$pen->thumbnail")}}" alt="">
                             <div class="top-wrapper ">
                                 <div class="row d-flex justify-content-between">
                                     <h2 class="col-lg-8 col-md-12 text-uppercase">
-                                        Kuliah Hhari Kewirausahaan
+                                        {{ $pen->judul }}
                                     </h2>
                                     <div class="col-lg-4 col-md-12 right-side d-flex justify-content-end">
                                         <div class="desc">
-                                           <h2>Dosen KWU 1</h2>
-                                            <h3>12 Dec ,2017 11:21 am</h3>
+                                           <h2>{{ $pen->dosen->nama }}</h2>
+                                            <h3>{{ $pen->upload_date }}</h3>
                                         </div>
                                         <div class="user-img">
                                             <img src="img/user.jpg" alt="">
@@ -25,30 +25,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tags">
+                            {{-- <div class="tags">
                                 <ul>
                                     <li><a href="#">Lifestyle</a></li>
                                     
                                     <li><a href="#">Technology</a></li>
                                     </ul>
-                            </div>
+                            </div> --}}
                             <div class="single-post-content">
-                                <p>
-                                    MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money on boot camp when you can get the MCSE study materials yourself at a fraction of the camp price. However, who has the willpower to actually sit through a self-imposed MCSE training.
-                                </p>
-                                <p>
-                                    MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money on boot camp when you can get the MCSE study materials yourself at a fraction of the camp price. However, who has the willpower to actually sit through a self-imposed MCSE training. who has the willpower to actually sit through a self-imposed MCSE training.
-                                </p>
-
-                                <blockquote>Ea possunt paria non esse. Pudebit te, inquam, illius tabulae, quam Cleanthes sane commode verbis depingere solebat. Urgent tamen et nihil remittunt. An vero displicuit ea, quae tributa est animi virtutibus tanta praestantia? Sint ista Graecorum; Cur igitur, cum de re conveniat, non malumus usitate loqui? Huius ego nunc auctoritatem sequens idem faciam.
-                                <cite>Wise Man</cite></blockquote>
-
-                                <p>
-                                    MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money on boot camp when you can get the MCSE study materials yourself at a fraction of the camp price. However, who has the willpower to actually sit through a self-imposed MCSE training.
-                                </p>
-                                <p>
-                                    MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money on boot camp when you can get the MCSE study materials yourself at a fraction of the camp price. However, who has the willpower to actually sit through a self-imposed MCSE training. who has the willpower to actually sit through a self-imposed MCSE training.
-                                </p>
+                               {!! $pen->isi !!}
                             </div>
                             
                             <!-- End nav Area -->
@@ -62,7 +47,7 @@
                             
                         </div>
                     </div>
-                    <div class="col-lg-4 sidebar-area ">
+                    {{-- <div class="col-lg-4 sidebar-area ">
                         <div class="single_widget search_widget">
                             <div id="imaginary_container"> 
                                 <div class="input-group stylish-input-group">
@@ -122,7 +107,7 @@
                                 <li><a href="#">Technology</a></li>
                             </ul>
                         </div>                                                 
-                    </div>
+                    </div> --}}
                 </div>
             </div>    
         </section>
