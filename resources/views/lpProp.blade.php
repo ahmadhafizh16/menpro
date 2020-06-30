@@ -83,7 +83,7 @@
               <div class="col-md-5" style="padding-top:30px;">
                 
                   <div class="input-group">
-                    <input type="text" class="form-control" v-model="search" placeholder="Cari judul proposal">
+                    <input type="text" class="form-control" v-model="search" @keyup.enter="reloc()" placeholder="Cari judul proposal">
                     <span class="input-group-btn">
                       <button class="btn btn-default" type="button" @click="reloc()" style="border:1px solid #ccc;cursor :pointer;"><i class="fa fa-search"></i></button>
                     </span>
@@ -123,7 +123,7 @@
                           {!! $p2->deskripsi !!}
                         <br>
                         @if(Auth::check() && Auth::user()->role != 4)
-                        <a  href="{{ url($p2->historyLatest()->first()->file_proposal) }}" download class="btn btn-primary" ><i class="fa fa-download" style="color:#f9f9f9"></i>  Download Proposal </a>
+                        <a  href="{{ url($p2->historyLatest()->first()->file_proposal) }}" download class="btn btn-info" ><i class="fa fa-download" style="color:#f9f9f9"></i>  Download Proposal </a>
                         @endif
                       </tr>
                     </table>
