@@ -43,9 +43,9 @@
               <ul class="navbar-nav">
               <li><a href="{{ url("/") }}">Home</a></li>
               <li><a href="#news">Pengumuman</a></li>
-              <li><a href="#travel">Proposal</a></li>
               
               <li><a href="#team">Tim Dosen</a></li>
+              <li><a href="{{ url("/proposal") }}">Proposal</a></li>
               @if(!Auth::check())
               <li><a href="{{ url("login") }}">Log In</a></li>
               @endif

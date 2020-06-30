@@ -8,7 +8,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="single-page-post">
-                            <img class="img-fluid" src="{{asset("$pen->thumbnail")}}" alt="">
+                            <img class="img-fluid" src="{{asset("$pen->thumbnail")}}" alt="" style="width:740px;height:487px;">
                             <div class="top-wrapper ">
                                 <div class="row d-flex justify-content-between">
                                     <h2 class="col-lg-8 col-md-12 text-uppercase">

@@ -107,7 +107,7 @@ Route::get('/getDosen', 'AdminController@getDosen');
 Route::get('/getKelas', 'AdminController@getKelas');
 Route::get('/getMhs', 'AdminController@getMhs');
 
-Route::get('/l', 'HomeController@index')->name('home');
+Route::get('/proposal/{jur?}/{jenis?}/{bidang?}/{search?}', 'HomeController@proposal');
 
 
 Route::get('/datagen/{dataN}/{var?}/{action?}', 'HomeController@dataGen')->name('dataGen');

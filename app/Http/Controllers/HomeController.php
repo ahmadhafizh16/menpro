@@ -61,6 +61,31 @@ class HomeController extends Controller
         return view('jurusan');
     }
 
+    public function proposal($jur = 0,$jenis = 0,$bidang = 0,$search = null)
+    {   
+        $prop2 = Proposal::whereIn('id',function($query) {
+            $query->select('id_proposal')->from('proposal_history');
+        })
+        ->where("banner","!=","null");
+
+        if($jenis){
+            $prop2 = $prop2->where("jenis",$jenis);
+        }
+        
+        if($bidang){
+            // dd($bidang);
+            $prop2 = $prop2->where("bidang",$bidang);
+        }
+
+        if($search){
+            $prop2 = $prop2->where("judul","like","%$search%");
+        }
+
+        $prop2 = $prop2->orderBy("id","desc")->paginate(10);
+        // dd($jenis);
+        return view('lpProp',compact("prop2","jenis","bidang","search"));
+    }
+
     public function setDosen()
     {
         return view('setDosen');

@@ -1,11 +1,11 @@
 @extends('layouts.landing')
 
 @section('content')
-<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg">
+<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg" style="height:300px;">
     <div class="overlay-bg overlay"></div>
     <div class="container">
       <div class="row ">
-        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 16% auto 9% auto !important; ">
+        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 8% auto 9% auto !important; ">
           <h1>
             Sistem Manajemen<br>
             Hari Kewirausahaan Itenas.								
@@ -39,7 +39,7 @@
       <div class="active-cat-carusel">
         @foreach ($peng as $p)
         <div class="item single-cat">
-          <img src="{{asset("$p->thumbnail")}}" alt="">
+          <img src="{{asset("$p->thumbnail")}}" alt="" style="width:340px;height:226px;">
           <p class="date">{{ $p->upl_date }}</p>
           <h4><a href="{{url("/news/".$p->id)}}">{{ $p->judul }}</a></h4>
         </div>
@@ -51,7 +51,7 @@
   <!-- End category Area -->
   
   <!-- Start travel Area -->
-  <section class="travel-area section-gap" id="travel">
+  {{-- <section class="travel-area section-gap" id="travel">
     <div class="container">
       <div class="row d-flex justify-content-center">
         <div class="menu-content pb-70 col-lg-8">
@@ -121,7 +121,7 @@
         <a href="#" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60">Load More </a>		
       </div>
     </div>					
-  </section>
+  </section> --}}
   <!-- End travel Area -->
   
   <!-- Start fashion Area -->
@@ -129,30 +129,22 @@
   <!-- End fashion Area -->
   
   <!-- Start team Area -->
+
   <section class="team-area section-gap" id="team">
     <div class="container">
       <div class="row d-flex justify-content-center">
         <div class="menu-content pb-70 col-lg-8">
           <div class="title text-center">
-            <h1 class="mb-10">Tentang Team Dosen</h1>
-            <p>Who are in extremely love with eco friendly system.</p>
+            <h1 class="mb-10">Team Koordinator Kewirausahaan</h1>
+            <p></p>
           </div>
         </div>
       </div>						
-      <div class="row justify-content-center d-flex align-items-center">
-        <div class="col-lg-6 team-left">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.</p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.
-          </p>
-        </div>
-        <div class="col-lg-6 team-right d-flex justify-content-center">
+        <div class="col-lg-12 team-right d-flex justify-content-center">
           <div class="row active-team-carusel">
-            <div class="single-team">
+            <div class="single-cat">
                 <div class="thumb">
-                    <img class="img-fluid" src="{{asset("blog/img/team1.jpg")}}" alt="">
+                    <img class="img-fluid" src="{{asset("blog/img/koor1.jpg")}}" alt="">
                     <div class="align-items-center justify-content-center d-flex">
                   <a href="#"><i class="fa fa-facebook"></i></a>
                   <a href="#"><i class="fa fa-twitter"></i></a>
@@ -160,24 +152,55 @@
                     </div>
                 </div>
                 <div class="meta-text mt-30 text-center">
-                  <h4>Dora Walker</h4>
-                  <p>Dosen Kewirausahaan</p>									    	
+                  <h4>Agung Pecunk</h4>
+                  									    	
                 </div>
             </div>
-            <div class="single-team">
-                <div class="thumb">
-                    <img class="img-fluid" src="{{asset("blog/img/team2.jpg")}}" alt="">
-                    <div class="align-items-center justify-content-center d-flex">
-                  <a href="#"><i class="fa fa-facebook"></i></a>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                    </div>
+
+            <div class="single-cat">
+              <div class="thumb">
+                  <img class="img-fluid" src="{{asset("blog/img/koor2.jpg")}}" alt=""  style="width: 240px;height:240px;">
+                  <div class="align-items-center justify-content-center d-flex">
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-linkedin"></i></a>
+                  </div>
+              </div>
+              <div class="meta-text mt-30 text-center">
+                <h4>Andry Masry</h4>
+                									    	
+              </div>
+          </div>
+
+          <div class="single-cat">
+            <div class="thumb">
+                <img class="img-fluid" src="{{asset("blog/img/koor3.jpg")}}" alt="" style="width: 240px;height:240px;">
+                <div class="align-items-center justify-content-center d-flex">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-linkedin"></i></a>
                 </div>
-                <div class="meta-text mt-30 text-center">
-                  <h4>Lena Keller</h4>
-                  <p>Dosen Kewirausahaanr</p>			    	
-                </div>
-            </div>													
+            </div>
+            <div class="meta-text mt-30 text-center">
+              <h4>Dewi Rosmala</h4>
+              									    	
+            </div>
+        </div>
+            
+            <div class="single-cat">
+              <div class="thumb">
+                  <img class="img-fluid" src="{{asset("blog/img/koor4.jpg")}}" alt="">
+                  <div class="align-items-center justify-content-center d-flex">
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-linkedin"></i></a>
+                  </div>
+              </div>
+              <div class="meta-text mt-30 text-center">
+                <h4>Syalaf Udin</h4>
+                									    	
+              </div>
+          </div>		
           </div>
         </div>
       </div>
