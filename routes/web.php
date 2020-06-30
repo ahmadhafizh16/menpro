@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function () {
         
         Route::post('/editKelompok', 'DosenController@editKelompok');
         
-        Route::get('/getTaughClass/{id}', 'DosenController@getTaughClass');
+        Route::get('/getTaughClass/{id?}', 'DosenController@getTaughClass');
         Route::get('/getKelDetail/{id}', 'DosenController@getKelDetail');
     });
 

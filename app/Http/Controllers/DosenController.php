@@ -88,7 +88,7 @@ class DosenController extends Controller
         return $this->setResponse($kel);
     }
 
-    public function getTaughClass($id)
+    public function getTaughClass($id = 0)
     {
         $jur = Kelompok::where("id_kelas",$id)->get();
 
