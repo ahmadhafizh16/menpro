@@ -25,6 +25,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/getIn', 'HomeController@getIn');
     Route::middleware('admin')->group(function () {
     #ROUTE GET
         Route::get('/home', 'HomeController@index')->name('dashboard');

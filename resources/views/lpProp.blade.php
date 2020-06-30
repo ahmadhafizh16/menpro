@@ -121,7 +121,10 @@
                         <td colspan="3">
                           <b> <br>Deskripsi:</b><br>
                           {!! $p2->deskripsi !!}
-                        </td>
+                        <br>
+                        @if(Auth::check() && Auth::user()->role != 4)
+                        <a  href="{{ url($p2->historyLatest()->first()->file_proposal) }}" download class="btn btn-primary" ><i class="fa fa-download" style="color:#f9f9f9"></i>  Download Proposal </a>
+                        @endif
                       </tr>
                     </table>
                  

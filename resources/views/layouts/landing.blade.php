@@ -48,6 +48,8 @@
               <li><a href="{{ url("/proposal") }}">Proposal</a></li>
               @if(!Auth::check())
               <li><a href="{{ url("login") }}">Log In</a></li>
+              @else
+              <li><a href="{{ url("getIn") }}">Dashboard</a></li>
               @endif
               <!-- Dropdown -->
                 {{-- <li class="dropdown">

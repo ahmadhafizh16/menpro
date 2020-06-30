@@ -47,6 +47,8 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">Menu</li>
         <!-- Optionally, you can add icons to the links -->
+        <li><a href="{{ url("/") }}"><i class="fa fa-home"></i> <span>Home </span></a></li>
+        <li><a href="{{ url("proposal") }}"><i class="fa fa-file"></i> <span>Semua Proposal </span></a></li>
         @if(Auth::user()->role == 4)
         <li><a href="{{ route("regis") }}"><i class="fa fa-users"></i> <span>Kelompok </span></a></li>
           @if($isAda)
@@ -70,6 +72,7 @@
         <li><a href="{{ url("dosendb") }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         <li><a href="{{ route("dataKelompok") }}"><i class="fa fa-users"></i> <span>Data Kelompok & Kelas</span></a></li>
         @endif
+
         {{-- <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
             <span class="pull-right-container">

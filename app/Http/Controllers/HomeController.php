@@ -86,6 +86,20 @@ class HomeController extends Controller
         return view('lpProp',compact("prop2","jenis","bidang","search"));
     }
 
+    public function getIn(){
+        // dd($user);
+        switch (Auth::user()->role){
+          case '1':
+                return redirect("/home");
+          case '2':
+                return redirect("/koordb");
+          case '3':
+                return redirect("/dosendb");
+          case '4':
+                return redirect("/regis");
+        }
+      }
+
     public function setDosen()
     {
         return view('setDosen');
