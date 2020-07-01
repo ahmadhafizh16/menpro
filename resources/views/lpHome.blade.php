@@ -1,11 +1,11 @@
 @extends('layouts.landing')
 
 @section('content')
-<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg" style="height:200px;">
+<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg" style="height:150px;">
     <div class="overlay-bg overlay"></div>
     <div class="container">
       <div class="row ">
-        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 4% auto 11% auto !important; ">
+        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 1.7% auto 11% auto !important; ">
           <h2 style="color:#f9f9f9;margin-top:3%;">
             Sistem Manajemen<br>
             Hari Kewirausahaan Itenas.								
