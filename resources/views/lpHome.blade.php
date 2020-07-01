@@ -37,7 +37,7 @@
         </div>
       </div>
       @if($peng->isEmpty())
-          <h3> Belum ada pengumuman </h3>
+          <h3 class="text-center" style="margin-top:60px;border:1px solid #333;padding:10px;"> Belum ada pengumuman </h3>
       @else
       <div class="active-cat-carusel">
         @foreach ($peng as $p)
