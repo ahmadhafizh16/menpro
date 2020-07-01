@@ -70,8 +70,13 @@
                 
               </div>
           </div>
+          @if($prop2->isEmpty())
+          <div class="row text-center" style="padding-top:50px;">
+              <h3>Belum ada data</h3>
+          </div>
+          @else
           <div class="row" style="padding-top:50px;">
-         
+            
               
                 @foreach ($prop2 as $p2)
                 <div class="col-md-12" style="color:#222;margin-bottom:30px;">
@@ -122,6 +127,7 @@
               {{ $prop2->links() }}
             </div>
           </div>
+          @endif
           </div>
         </div>
       </div>

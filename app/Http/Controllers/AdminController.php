@@ -17,7 +17,7 @@ class AdminController extends Controller
     public function addJurusan(Request $req)
     {
         $validatedData = $req->validate([
-            'nama' => 'required',
+        'nama' => 'required',
             'semester_aktif' => 'required',
         ]);
 
@@ -321,7 +321,7 @@ class AdminController extends Controller
             'id' => 'required'
         ]);
         // dd($req->all());
-        $j = Kelas::find($req->id);
+        $j = User::find($req->id);
         $j->delete();
 
         return $this->setResponse($j);

@@ -35,7 +35,10 @@
             <h2 class="">Pengumuman Terbaru Kewirausahaan Itenas</h2>
           </div>
         </div>
-      </div>						
+      </div>
+      @if($peng->isEmpty())
+          <h3> Belum ada pengumuman </h3>
+      @else
       <div class="active-cat-carusel">
         @foreach ($peng as $p)
         <div class="item single-cat">
@@ -45,7 +48,8 @@
         </div>
         @endforeach
       							
-      </div>												
+      </div>	
+      @endif											
     </div>	
   </section>
   <!-- End category Area -->

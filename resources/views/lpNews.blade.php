@@ -6,7 +6,7 @@
         <section class="post-area">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-lg-8">
+                    <div class="col-lg-8" style="padding-bottom: 60px;">
                         <div class="single-page-post">
                             <img class="img-fluid" src="{{asset("$pen->thumbnail")}}" alt="" style="width:740px;height:487px;">
                             <div class="top-wrapper ">
