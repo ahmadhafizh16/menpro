@@ -1,15 +1,15 @@
 @extends('layouts.landing')
 
 @section('content')
-<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg" style="height:300px;">
+<section class="banner-area relative" id="home" data-parallax="scroll" data-image-src="{{asset("blog/img/itens")}}.jpg" style="height:200px;">
     <div class="overlay-bg overlay"></div>
     <div class="container">
       <div class="row ">
-        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 8% auto 9% auto !important; ">
-          <h1>
+        <div class="banner-content d-flex align-items-center col-lg-12 col-md-12" style="margin: 4% auto 11% auto !important; ">
+          <h2 style="color:#f9f9f9;margin-top:3%;">
             Sistem Manajemen<br>
             Hari Kewirausahaan Itenas.								
-          </h1>
+          </h2>
       
         </div>	
         <div class="head-bottom-meta d-flex justify-content-between align-items-end col-lg-12">
@@ -139,8 +139,17 @@
             <p></p>
           </div>
         </div>
-      </div>						
-        <div class="col-lg-12 team-right d-flex justify-content-center">
+      </div>
+      <div class="row align-item-center d-flex justify-content-center">
+      <div class="col-lg-6 team-left">	
+        <p>	
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.	
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.</p>	
+        <p>	
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.	
+        </p>	
+      </div>
+        <div class="col-lg-6 team-right d-flex justify-content-center">
           <div class="row active-team-carusel">
             <div class="single-cat">
                 <div class="thumb">
@@ -185,7 +194,7 @@
               <h4>Dewi Rosmala</h4>
               									    	
             </div>
-        </div>
+          </div>
             
             <div class="single-cat">
               <div class="thumb">
@@ -201,6 +210,7 @@
                 									    	
               </div>
           </div>		
+          </div>
           </div>
         </div>
       </div>

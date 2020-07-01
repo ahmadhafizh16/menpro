@@ -56,15 +56,15 @@ $(document).ready(function(){
 
 
   $('.active-team-carusel').owlCarousel({
-      items:4,
+      items:2,
       loop:true,
       autoplay:true,
       nav:true,
       navText: ["<span class='lnr lnr-arrow-up'></span>","<span class='lnr lnr-arrow-down'></span>"],
-      items : 4, 
-      itemsDesktop : [992,4],
-      itemsDesktopSmall : [768,4], 
-      itemsTablet: [480,2], 
+      items : 2, 
+      itemsDesktop : [992,2],
+      itemsDesktopSmall : [768,2], 
+      itemsTablet: [480,1], 
       itemsMobile : [320,2]
   });
 
