@@ -27,12 +27,12 @@
 
 
   <!-- Start category Area -->
-  <section class="category-area section-gap" id="news">
+  <section class="category-area section-gap" id="news" style="padding-top :50px;">
     <div class="container">
       <div class="row d-flex justify-content-center">
-        <div class="menu-content pb-70 col-lg-8">
+        <div class="menu-content pb-30 col-lg-8">
           <div class="title text-center">
-            <h1 class="mb-10">Pengumuman Terbaru Kewirausahaan Itenas</h1>
+            <h2 class="">Pengumuman Terbaru Kewirausahaan Itenas</h2>
           </div>
         </div>
       </div>						
