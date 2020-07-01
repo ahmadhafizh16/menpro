@@ -53,7 +53,7 @@
 								<label for="exampleInputEmail1">Tahun Ajaran</label>
 								<select class="error form-control" v-model="tahun">
 									<option disabled hidden value="null">--- Tahun Ajaran ---</option>
-									@for($i = date("Y");$i <= (date("Y")+10); $i++)
+									@for($i = (date("Y")-1);$i <= (date("Y")+10); $i++)
 									<option value="{{ $i }}/{{ $i+1 }}">{{ $i }}/{{ $i+1 }}</option>
 									@endfor
 								</select>
