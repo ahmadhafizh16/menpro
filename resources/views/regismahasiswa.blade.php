@@ -4,7 +4,10 @@
 <div id="app">
 	<section class="content-header">
 			<h1>
-				Data Kelompok @if(!$isAda) <button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Daftarkan Kelompok</button> @endif
+				Data Kelompok @if(!$isAda) <button class="btn btn-success" @click="modalOpen('add')"><i class="fa fa-plus"></i> Daftarkan Kelompok</button>
+				@else
+				<button class="btn btn-warning" @click="editData({{ $kelompok->id }})"><i class="fa fa-edit"></i> Edit Kelompok</button>
+				@endif
 				<small></small>
 			</h1>
 	</section>
@@ -193,8 +196,11 @@
 						<div :class="Boolean(errors.kel)? 'form-group has-error' : 'form-group'">
 							<label for="">Anggota Kelompok</label><br>
 							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" data-placeholder="Pilih 2 anggota kelompok" style="width:100% !important;">
+								@foreach ($sel as $s)
+									{!! $s !!}
+								@endforeach
 							</select>
-							<small v-if="kelTr">Pilih 1 anggota lagi</small>
+							<small v-if="kelTr">Silahkan pilih anggota</small>
 							{{-- <span --}}
 							<span v-if="Boolean(errors.kel)"class="help-block">
 								<ul>
@@ -248,7 +254,7 @@
 <script>
 $(document).ready(function() {
     $('.select2s').select2({
-		maximumSelectionLength : 3
+		maximumSelectionLength : 6
 	});
 });	
 function reloadTable(id){
@@ -289,16 +295,20 @@ var app = new Vue({
 			}
 		},
 		editData : function(id) {
-			let d = this.getDataById(id)
-			$('.select2s').val(d.id_jurusan);
-			$('.select2s').trigger('change');
-			$('.select2dosen').val(d.id_dosen);
+			@if($isAda)
+			$('.select2mhs').val({{ $idkel }});
+			$('.select2mhs').trigger('change');
+			$('.select2dosen').val({{ $kelompok->id_dosbing }});
 			$('.select2dosen').trigger('change');
-			this.jurusan = d.id_jurusan
-			this.nama_kel = ''
-			this.dosen = d.id_dosen
-			this.kelas = d.kelas
-			this.dtId = d.id
+			$('.select2kelas').val({{ $kelompok->id_kelas }});
+			$('.select2kelas').trigger('change');
+
+			this.nama_kel = '{{ $kelompok->nama_kel }}'
+			this.kel = {{ $idkel }}
+			this.dosen = {{ $kelompok->id_dosbing }}
+			this.kelas = {{ $kelompok->id_kelas }}
+			this.dtId = {{ $kelompok->id }}
+			@endif
 			this.errors = {}
 			this.modalOpen('edit')
 		},
@@ -306,7 +316,7 @@ var app = new Vue({
 			return this.dtTb.filter(dtTb => dtTb.id == id)[0]
 		},
 		editHandler : function() {
-			axios.post('{{ url("editKelas") }}',{
+			axios.post('{{ url("editKelompok") }}',{
 				id : this.dtId,
 				nama_kel : this.nama_kel,
 				kel : this.kel,
@@ -420,15 +430,7 @@ var app = new Vue({
 		getDataMhs : function(){
 			axios.get('{{ url("getMhs") }}')
 			.then(function (response) {
-				$('.select2mhs').select2({
-					data : response.data.data,
-					maximumSelectionLength: 2,
-					allowClear: true
-				});
-				setTimeout(function(){
-					$(".select2-search__field").css({"width":"100%"});
-					$(".select2-search__field").css({"padding-left":"15px"});
-				},400)
+				
 
 			})
 			.catch(function (error) {
@@ -439,6 +441,14 @@ var app = new Vue({
 					app.errors = error.response.data.data;
 				}
 			})
+			$('.select2mhs').select2({
+				maximumSelectionLength: 6,
+				allowClear: true
+			});
+			setTimeout(function(){
+				$(".select2-search__field").css({"width":"100%"});
+				$(".select2-search__field").css({"padding-left":"15px"});
+			},400)
 		}
 	},
 	async mounted() {
@@ -449,7 +459,7 @@ var app = new Vue({
 	},
 	watch : {
 		kel : function(){
-			if(this.kel.length == 1){
+			if(this.kel.length <= 6){
 				this.kelTr = true
 			}
 			else{

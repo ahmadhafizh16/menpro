@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@kwu.itenas.ac.id'),
+        'name' => env('MAIL_FROM_NAME', 'Admin'),
     ],
 
     /*
@@ -132,5 +132,10 @@ return [
     */
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
+    'mailers' => [
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+        ],
+    ],
 
 ];

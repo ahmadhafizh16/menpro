@@ -61,7 +61,7 @@ class HomeController extends Controller
         return view('jurusan');
     }
 
-    public function proposal($jur = 0,$jenis = 0,$bidang = 0,$search = null)
+    public function proposal($jurusan = 0,$jenis = 0,$bidang = 0,$search = null)
     {   
         $prop2 = Proposal::whereIn('id',function($query) {
             $query->select('id_proposal')->from('proposal_history');
@@ -77,13 +77,18 @@ class HomeController extends Controller
             $prop2 = $prop2->where("bidang",$bidang);
         }
 
+        if($jurusan){
+            // dd($jurusan);
+            $prop2 = $prop2->where("id_jurusan",$jurusan);
+        }
+
         if($search){
             $prop2 = $prop2->where("judul","like","%$search%");
         }
 
         $prop2 = $prop2->orderBy("id","desc")->paginate(10);
         // dd($jenis);
-        return view('lpProp',compact("prop2","jenis","bidang","search"));
+        return view('lpProp',compact("prop2","jenis","bidang","search","jurusan"));
     }
 
     public function getIn(){
@@ -165,17 +170,48 @@ class HomeController extends Controller
         // dd($isAda);
         
         $isUploaded = ProposalHistory::where("id_proposal","0")->get();
+        $idkel = '[]';
+        $jur = substr(auth()->guard("web")->user()->nomor,0,2);
+
+        $ta = TA::where("isActive",1)->first();
+
+        $mhsz = User::where("id","!=",Auth::user()->id)
+                    ->where("nomor","like","$jur%")
+                    ->whereNotIn('id',function($query) {
+                            $query->select('id_user')->from('detail_kelompok');
+                    })
+                    ->where("role",4)
+                    ->orderBy("nomor","desc")->get();
+        $sel = [];
+
+        foreach($mhsz as $j){
+            $sel[] = "<option value='$j->id'> $j->nama [$j->nomor] </option>";
+        }
+
         if($isAda){
             $dtKel = $dtKel->first();
             $kelompok = Kelompok::find($dtKel->id_kelompok);
             // dd($kelompok->mhs()->get());
+            $k = [];
+            $idkel = '[';
+            foreach ($kelompok->mhs()->get() as $mhs){							
+                $k[] =  $mhs->id;
+            }
+            
+            $mhsz2 = User::where("id","!=",Auth::user()->id)->whereIn('id',$k)
+                    ->get();
+            foreach($mhsz2 as $js){
+                $sel[] = "<option value='$js->id' selected='selected'> $js->nama [$js->nomor] </option>";
+            }
+            $idkel .= implode(",",$k); 
+            $idkel .=  ']';
             if(!empty($kelompok->id_proposal)){
                 $isUploaded = ProposalHistory::where("id_proposal",$kelompok->id_proposal)->get();
             }
         }
         // dd($isUploaded[0]);
         
-        return view('regismahasiswa',compact("isAda","kelompok","isUploaded"));
+        return view('regismahasiswa',compact("isAda","kelompok","isUploaded","idkel","sel"));
     }
 
     public function addKelompok(Request $req)
@@ -183,9 +219,10 @@ class HomeController extends Controller
         $validatedData = $req->validate([
             'dosen' => 'required',
             'nama_kel' => 'required',
-            'kel' => 'required|min:2',
+            'kel' => 'required',
             'kelas' => 'required',
-        ],["min" => "Pilih 2 anggota kelompok"]);
+        ]);
+        
         // dd($req->all());
         // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
         //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
@@ -203,6 +240,35 @@ class HomeController extends Controller
         return $this->setResponse($inp);
     }
 
+    public function editKelompok(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'dosen' => 'required',
+            'nama_kel' => 'required',
+            'kel' => 'required',
+            'kelas' => 'required',
+        ]);
+        
+        // dd($req->all());
+        // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
+        //     return $this->setResponse(["error" => ["Data sudah pernah ditambahkan !"]],400);
+        // }
+        $kel = $req->kel;
+        array_push($kel,Auth::user()->id);
+        $inp = Kelompok::find($req->id);
+        $inp->id_dosbing = $req->dosen;
+        $inp->id_kelas = $req->kelas;
+        $inp->nama_kel = $req->nama_kel;
+        $inp->save();
+
+        $aa = DB::table("detail_kelompok")->where("id_kelompok",$req->id)->delete();
+
+        $inp->mhs()->attach($kel);
+        
+        return $this->setResponse($inp);
+    }
+
     public function addProposal(Request $req)
     {
         $validatedData = $req->validate([
@@ -210,6 +276,15 @@ class HomeController extends Controller
             'jenis' => 'required',
             'bidang' => 'required',
             'deskripsi' => 'required',
+            'segmentasi' => 'required',
+            'proposisi' => 'required',
+            'jalur' => 'required',
+            'hubungan_pel' => 'required',
+            'mitra_kunci' => 'required',
+            'struktur_pembiayaan' => 'required',
+            'pendapatan' => 'required',
+            'aktivitas_kunci' => 'required',
+            'sumberdaya' => 'required',
         ]);
         // dd($req->all());
         // if(Kelas::where("kelas",$req->kelas)->where("id_jurusan",$req->jurusan)->where("id_tahunajaran",$req->tahun)->exists()){
@@ -224,6 +299,16 @@ class HomeController extends Controller
         $inp->jenis = $req->jenis;
         $inp->bidang = $req->bidang;
         $inp->deskripsi = $req->deskripsi;
+        $inp->segmentasi = $req->segmentasi;
+        $inp->jalur = $req->jalur;
+        $inp->hubungan_pel = $req->hubungan_pel;
+        $inp->mitra_kunci = $req->proposisi;
+        $inp->struktur_pembiayaan = $req->struktur_pembiayaan;
+        $inp->pendapatan = $req->pendapatan;
+        $inp->aktivitas_kunci = $req->aktivitas_kunci;
+        $inp->sumberdaya = $req->sumberdaya;
+        $inp->proposisi = $req->proposisi;
+        $inp->id_jurusan = $kelompok->kelas->id_jurusan;
         $inp->save();
 
         $kelompok->id_proposal = $inp->id;
@@ -235,11 +320,19 @@ class HomeController extends Controller
     public function editProposal(Request $req)
     {
         $validatedData = $req->validate([
-            'id' => 'required',
             'judul' => 'required',
             'jenis' => 'required',
             'bidang' => 'required',
             'deskripsi' => 'required',
+            'segmentasi' => 'required',
+            'proposisi' => 'required',
+            'jalur' => 'required',
+            'hubungan_pel' => 'required',
+            'mitra_kunci' => 'required',
+            'struktur_pembiayaan' => 'required',
+            'pendapatan' => 'required',
+            'aktivitas_kunci' => 'required',
+            'sumberdaya' => 'required',
         ]);
 
         $inp = Proposal::find($req->id);
@@ -247,6 +340,15 @@ class HomeController extends Controller
         $inp->jenis = $req->jenis;
         $inp->bidang = $req->bidang;
         $inp->deskripsi = $req->deskripsi;
+        $inp->segmentasi = $req->segmentasi;
+        $inp->jalur = $req->jalur;
+        $inp->hubungan_pel = $req->hubungan_pel;
+        $inp->mitra_kunci = $req->proposisi;
+        $inp->struktur_pembiayaan = $req->struktur_pembiayaan;
+        $inp->pendapatan = $req->pendapatan;
+        $inp->aktivitas_kunci = $req->aktivitas_kunci;
+        $inp->sumberdaya = $req->sumberdaya;
+        $inp->proposisi = $req->proposisi;
         $inp->save();
 
         return $this->setResponse($inp);
@@ -296,6 +398,27 @@ class HomeController extends Controller
             unlink(public_path("/").$inp->banner);
         }
         $inp->banner = "upload/".$fName;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function uploadCanvas(Request $req)
+    {   
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'file2' => 'required|mimes:png,jpg,jpeg|max:10240',
+        ]);
+        
+      
+        $inp = Proposal::find($req->id);
+            
+        $fName = time().'_'.$req->file2->getClientOriginalName();
+        $req->file2->move(public_path('upload'), $fName);
+        if(!empty($inp->canvas)){
+            unlink(public_path("/").$inp->canvas);
+        }
+        $inp->canvas = "upload/".$fName;
         $inp->save();
 
         return $this->setResponse($inp);

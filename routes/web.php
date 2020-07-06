@@ -91,11 +91,13 @@ Route::middleware('auth')->group(function () {
 
 
         Route::post('/addKelompok', 'HomeController@addKelompok');
+        Route::post('/editKelompok', 'HomeController@editKelompok');
         Route::post('/addProposal', 'HomeController@addProposal');
 
         Route::post('/editProposal', 'HomeController@editProposal');
         Route::post('/uploadProp', 'HomeController@uploadProp');
         Route::post('/uploadBanner', 'HomeController@uploadBanner');
+        Route::post('/uploadCanvas', 'HomeController@uploadCanvas');
         
         Route::post('/deleteProp', 'HomeController@deleteProp');
     });
