@@ -48,6 +48,8 @@
       </form>
       <br>
       <a href="{{ route("register") }}" class="btn btn-primary btn-flat" style="width:100% !important">Daftar Akun Baru</a>
+<br><br>
+      <a href="{{ url("/password/reset") }}" class="" style="width:100% !important">Lupa Password</a>
   
     </div>
 @endsection
