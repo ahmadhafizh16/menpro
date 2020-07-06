@@ -14,6 +14,7 @@
 Route::get('/', "HomeController@lpHome");
 
 Route::get('/news/{id}',"HomeController@news");
+Route::get('/proposalview/{id}',"HomeController@propview");
 
 Auth::routes();
 Route::post('admin-login', ['as' => 'admin-login', 'uses' => 'Auth\AdminLoginController@login']);

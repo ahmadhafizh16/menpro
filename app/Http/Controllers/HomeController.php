@@ -56,6 +56,23 @@ class HomeController extends Controller
         return view('lpNews',compact("pen"));
     }
 
+    public function propview($id)
+    {
+        $data = [ 
+            'segmentasi' => 'Sementasi Konsumen',
+            'proposisi' => 'Proposisi Nilai',
+            'jalur' => 'Jalur',
+            'hubungan_pel' => 'Hubungan dengan Pelanggan',
+            'pendapatan' => 'Sumber Pendapatan',
+            'aktivitas_kunci' => 'Aktivitas Kunci',
+            'sumberdaya' => 'Sumber Daya Utama',
+            'mitra_kunci' => 'Mitra Kunci',
+            'struktur_pembiayaan' => 'Struktur Pembiayaan',
+        ];
+        $pen = Proposal::findOrFail($id);
+        return view('lpPropview',compact("pen","data"));
+    }
+
     public function jurusan()
     {
         return view('jurusan');

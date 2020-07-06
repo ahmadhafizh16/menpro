@@ -195,7 +195,7 @@
 						</div>
 						<div :class="Boolean(errors.kel)? 'form-group has-error' : 'form-group'">
 							<label for="">Anggota Kelompok</label><br>
-							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" data-placeholder="Pilih 2 anggota kelompok" style="width:100% !important;">
+							<select class="select2mhs form-control" onchange="app.kel = $('.select2mhs').val()" multiple="multiple" data-placeholder="Pilih anggota kelompok" style="width:100% !important;">
 								@foreach ($sel as $s)
 									{!! $s !!}
 								@endforeach
