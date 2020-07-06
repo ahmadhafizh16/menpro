@@ -146,33 +146,15 @@
       </div>
       <div class="row align-item-center d-flex justify-content-center">
       <div class="col-lg-6 team-left">	
-        <p>	
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.	
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.</p>	
-        <p>	
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua.	
-        </p>	
+        {!! App\KoorText::find(1)->content !!}
       </div>
         <div class="col-lg-6 team-right d-flex justify-content-center">
           <div class="row active-team-carusel">
-            <div class="single-cat">
-                <div class="thumb">
-                    <img class="img-fluid" src="{{asset("blog/img/koor1.jpg")}}" alt="">
-                    <div class="align-items-center justify-content-center d-flex">
-                  <a href="#"><i class="fa fa-facebook"></i></a>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="meta-text mt-30 text-center">
-                  <h4>Agung Pecunk</h4>
-                  									    	
-                </div>
-            </div>
-
+            @foreach (App\KoorFoto::all() as $k => $v)
+                
             <div class="single-cat">
               <div class="thumb">
-                  <img class="img-fluid" src="{{asset("blog/img/koor2.jpg")}}" alt=""  style="width: 240px;height:240px;">
+                  <img class="img-fluid" src="{{asset("$v->file")}}" alt=""  style="width: 240px;height:240px;">
                   <div class="align-items-center justify-content-center d-flex">
                 <a href="#"><i class="fa fa-facebook"></i></a>
                 <a href="#"><i class="fa fa-twitter"></i></a>
@@ -180,40 +162,12 @@
                   </div>
               </div>
               <div class="meta-text mt-30 text-center">
-                <h4>Andry Masry</h4>
+                <h4>{{ $v->name }}</h4>
                 									    	
               </div>
           </div>
-
-          <div class="single-cat">
-            <div class="thumb">
-                <img class="img-fluid" src="{{asset("blog/img/koor3.jpg")}}" alt="" style="width: 240px;height:240px;">
-                <div class="align-items-center justify-content-center d-flex">
-              <a href="#"><i class="fa fa-facebook"></i></a>
-              <a href="#"><i class="fa fa-twitter"></i></a>
-              <a href="#"><i class="fa fa-linkedin"></i></a>
-                </div>
-            </div>
-            <div class="meta-text mt-30 text-center">
-              <h4>Dewi Rosmala</h4>
-              									    	
-            </div>
-          </div>
-            
-            <div class="single-cat">
-              <div class="thumb">
-                  <img class="img-fluid" src="{{asset("blog/img/koor4.jpg")}}" alt="">
-                  <div class="align-items-center justify-content-center d-flex">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-linkedin"></i></a>
-                  </div>
-              </div>
-              <div class="meta-text mt-30 text-center">
-                <h4>Syalaf Udin</h4>
-                									    	
-              </div>
-          </div>		
+            @endforeach
+		
           </div>
           </div>
         </div>

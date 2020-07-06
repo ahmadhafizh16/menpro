@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
+use App\User;
 use App\Dosen;
 use App\Kelas;
-use App\User;
 use DataTables;
 use App\Jurusan;
-use Auth;
+use App\KoorFoto;
+use App\KoorText;
 use App\TahunAjaran as TA;
 use Illuminate\Http\Request;
 
@@ -342,6 +344,99 @@ class AdminController extends Controller
                                  return $btn;
                             })
                             ->rawColumns(['action'])
+                            ->make(true);
+    }
+
+    /**
+     * 
+     *  KOOR
+     * 
+     */
+
+    public function addKoor(Request $req)
+    {
+        $validatedData = $req->validate([
+            'name' => 'required',
+            'file2' => 'required|mimes:png,jpg,jpeg|max:10240',
+        ]);
+
+        $inp = new KoorFoto();
+        
+        $fName = time().'_'.$req->file2->getClientOriginalName();
+        $req->file2->move(public_path('upload'), $fName);
+        $inp->name = $req->name;
+        $inp->file = "upload/".$fName;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function editKoor(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'name' => 'required',
+        ]);
+
+        $inp = KoorFoto::find($req->id);
+        if($req->hasFile("file2")){
+            $fName = time().'_'.$req->file2->getClientOriginalName();
+            $req->file2->move(public_path('upload'), $fName);
+            unlink(public_path("/").$inp->file);
+            $inp->file = "upload/".$fName;
+        }
+
+        $inp->name = $req->name;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function editKoorText(Request $req)
+    {
+        $validatedData = $req->validate([
+            'deskripsi' => 'required',
+        ]);
+
+        $inp = KoorText::find(1);
+        $inp->content = $req->deskripsi;
+
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function deleteKoor(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required'
+        ]);
+        // dd($req->all());
+        $j = KoorFoto::find($req->id);
+        unlink(public_path("/").$j->file);
+        $j->delete();
+
+        return $this->setResponse($j);
+    }
+
+    public function koorData()
+    {
+        $dos = KoorFoto::all();
+
+        return DataTables::of($dos)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+
+                                $btn = '<a onclick="editDt('.$row->id.')" class="edit btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>';
+
+                                $btn .= '&emsp;<a onclick="deleteDt('.$row->id.')" class="edit btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>';
+          
+                                 return $btn;
+                            })
+                            ->addColumn('foto',function($row){
+                                return "<img src='".asset("$row->file")."' style='width:200px;'>";
+                            })
+                            ->rawColumns(['action','foto'])
                             ->make(true);
     }
     

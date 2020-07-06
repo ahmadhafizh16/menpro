@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use App\User;
 use DataTables;
 use App\Kelompok;
-use App\User;
+use App\KoorText;
 use App\Proposal;
 use App\Pengumuman;
 use App\ProposalHistory;
@@ -126,6 +127,13 @@ class HomeController extends Controller
     {
         return view('setDosen');
     }
+
+    public function setKoor()
+    {
+        $deskripsi = KoorText::find(1)->content;
+        return view('setKoor',compact('deskripsi'));
+    }
+    
     
     public function setKelas()
     {

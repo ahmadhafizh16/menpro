@@ -68,6 +68,7 @@
         <li><a href="{{ route("tahunajaran") }}"><i class="fa fa-clock-o"></i> <span>Setting Tahun Ajaran</span></a></li>
         <li><a href="{{ route("setDosen") }}"><i class="fa fa-user"></i> <span>Dosen</span></a></li>
         <li><a href="{{ route("setKelas") }}"><i class="fa fa-hourglass-half"></i> <span>Setting Kelas</span></a></li>
+        <li><a href="{{ url("setKoor") }}"><i class="fa fa-user"></i> <span>Setting Team Koordinator</span></a></li>
         @elseif(Auth::user()->role == 3)        
         <li><a href="{{ url("dosendb") }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         <li><a href="{{ route("dataKelompok") }}"><i class="fa fa-users"></i> <span>Data Kelompok & Kelas</span></a></li>

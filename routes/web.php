@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/jurusan', 'HomeController@jurusan')->name('manage_jurusan');
         Route::get('/setKelas', 'HomeController@setKelas')->name('setKelas');
         Route::get('/setDosen', 'HomeController@setDosen')->name('setDosen');
+        Route::get('/setKoor', 'HomeController@setKoor');
         Route::get('/tahunajaran', 'HomeController@tahunAjaran')->name('tahunajaran');
         
         #ROUTE ADD
@@ -40,24 +41,29 @@ Route::middleware('auth')->group(function () {
         Route::post("addTAjaran","AdminController@addTAjaran");
         Route::post("addKelas","AdminController@addKelas");
         Route::post("addDosen","AdminController@addDosen");
+        Route::post("addKoor","AdminController@addKoor");
         
         #ROUTE DATAGEN
         Route::get("jurusanData","AdminController@jurusanData");
         Route::get("tajaranData","AdminController@tajaranData");
         Route::get("kelasData","AdminController@kelasData");
         Route::get("dosenData","AdminController@dosenData");
+        Route::get("koorData","AdminController@koorData");
         
         #ROUTE EDIT
         Route::post("editJurusan","AdminController@editJurusan");
         Route::post("editTAjaran","AdminController@editTAjaran");
         Route::post("editKelas","AdminController@editKelas");
         Route::post("editDosen","AdminController@editDosen");
+        Route::post("editKoor","AdminController@editKoor");
+        Route::post("editKoorText","AdminController@editKoorText");
         
         #ROUTE delete
         Route::post("deleteJurusan","AdminController@deleteJurusan");
         Route::post("deleteTAjaran","AdminController@deleteTAjaran");
         Route::post("deleteKelas","AdminController@deleteKelas");
         Route::post("deleteDosen","AdminController@deleteDosen");
+        Route::post("deleteKoor","AdminController@deleteKoor");
         
     });
     
