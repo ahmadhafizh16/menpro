@@ -420,7 +420,7 @@ class HomeController extends Controller
         $fName = time().'_'.$req->file->getClientOriginalName();
         $req->file->move(public_path('upload'), $fName);
         if(!empty($inp->banner)){
-            if(file_exists(ublic_path("/").$inp->banner)){
+            if(file_exists(public_path("/").$inp->banner)){
                 @unlink(public_path("/").$inp->banner);
             }
         }
@@ -443,7 +443,7 @@ class HomeController extends Controller
         $fName = time().'_'.$req->file2->getClientOriginalName();
         $req->file2->move(public_path('upload'), $fName);
         if(!empty($inp->canvas)){
-            if(file_exists(ublic_path("/").$inp->canvas)){
+            if(file_exists(public_path("/").$inp->canvas)){
                 @unlink(public_path("/").$inp->canvas);
             }
         }
@@ -461,7 +461,7 @@ class HomeController extends Controller
         ]);
        
         $inp = ProposalHistory::find($req->id);
-        if(file_exists(ublic_path("/").$inp->file_proposal)){
+        if(file_exists(public_path("/").$inp->file_proposal)){
             @unlink(public_path("/").$inp->file_proposal);
         }
         $inp->delete();

@@ -382,7 +382,7 @@ class AdminController extends Controller
         if($req->hasFile("file2")){
             $fName = time().'_'.$req->file2->getClientOriginalName();
             $req->file2->move(public_path('upload'), $fName);
-            if(file_exists(ublic_path("/").$inp->file)){
+            if(file_exists(public_path("/").$inp->file)){
                 @unlink(public_path("/").$inp->file);
             }
            
@@ -416,7 +416,7 @@ class AdminController extends Controller
         ]);
         // dd($req->all());
         $j = KoorFoto::find($req->id);
-        if(file_exists(ublic_path("/").$j->file)){
+        if(file_exists(public_path("/").$j->file)){
             @unlink(public_path("/").$j->file);
         }
         $j->delete();
