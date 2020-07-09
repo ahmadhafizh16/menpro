@@ -323,7 +323,6 @@
 			<!-- /.box-footer-->
 		
 		<!-- /.box -->
-		
 	</section>
 </div>
 	<!-- /.content -->
@@ -358,16 +357,16 @@ var app = new Vue({
 		judul : '',
 		judulFile : '',
 		@if(!empty($kelompok->id_proposal))
-		deskripsi : '{!!  str_replace("'","&apos;",$kelompok->proposal->deskripsi) !!}',
-		segmentasi : '{!! str_replace("'","&apos;",$kelompok->proposal->segmentasi) !!}',
-		proposisi : '{!! str_replace("'","&apos;",$kelompok->proposal->proposisi) !!}',
-		jalur : '{!! str_replace("'","&apos;",$kelompok->proposal->jalur) !!}',
-		hubungan_pel : '{!! str_replace("'","&apos;",$kelompok->proposal->hubungan_pel) !!}',
-		mitra_kunci : '{!! str_replace("'","&apos;",$kelompok->proposal->mitra_kunci) !!}',
-		struktur_pembiayaan : '{!! str_replace("'","&apos;",$kelompok->proposal->struktur_pembiayaan) !!}',
-		pendapatan : '{!! str_replace("'","&apos;",$kelompok->proposal->pendapatan) !!}',
-		aktivitas_kunci : '{!! str_replace("'","&apos;",$kelompok->proposal->aktivitas_kunci) !!}',
-		sumberdaya : '{!! str_replace("'","&apos;",$kelompok->proposal->sumberdaya) !!}',
+		deskripsi : '{!!  str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->deskripsi)) !!}',
+		segmentasi : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->segmentasi)) !!}',
+		proposisi : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->proposisi)) !!}',
+		jalur : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->jalur)) !!}',
+		hubungan_pel : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->hubungan_pel)) !!}',
+		mitra_kunci : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->mitra_kunci)) !!}',
+		struktur_pembiayaan : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->struktur_pembiayaan)) !!}',
+		pendapatan : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->pendapatan)) !!}',
+		aktivitas_kunci : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->aktivitas_kunci)) !!}',
+		sumberdaya : '{!! str_replace("'","&apos;",preg_replace("/\r\n|\r|\n/", ' ',$kelompok->proposal->sumberdaya)) !!}',
 		@else
 		deskripsi : '',
 		segmentasi : '',
