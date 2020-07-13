@@ -10,6 +10,7 @@ use App\Kelompok;
 use App\KoorText;
 use App\Proposal;
 use App\Pengumuman;
+use App\ProposalLiked;
 use App\ProposalHistory;
 use App\TahunAjaran as TA;
 use Illuminate\Http\Request;
@@ -79,9 +80,17 @@ class HomeController extends Controller
         return view('jurusan');
     }
 
-    public function proposal($jurusan = 0,$jenis = 0,$bidang = 0,$search = null)
+    public function proposal(Request $req,$jurusan = 0,$jenis = 0,$bidang = 0,$search = null)
     {   
-        $prop2 = Proposal::whereIn('id',function($query) {
+        $prop2 = new Proposal;
+
+        if($req->has("mostliked")){
+            $sort = $req->mostliked;
+            $prop2 = $prop2->select('*',\DB::raw("(select count(user_id) from proposal_liked where proposal_id = proposal.id) as likeds"))
+                           ->orderBy("likeds",$sort);
+        }
+
+        $prop2 = $prop2->whereIn('id',function($query) {
             $query->select('id_proposal')->from('proposal_history');
         })
         ->where("banner","!=","null");
@@ -91,7 +100,6 @@ class HomeController extends Controller
         }
         
         if($bidang){
-            // dd($bidang);
             $prop2 = $prop2->where("bidang",$bidang);
         }
 
@@ -105,7 +113,7 @@ class HomeController extends Controller
         }
 
         $prop2 = $prop2->orderBy("id","desc")->paginate(10);
-        // dd($jenis);
+        // return $this->setResponse($prop2);
         return view('lpProp',compact("prop2","jenis","bidang","search","jurusan"));
     }
 
@@ -554,5 +562,38 @@ class HomeController extends Controller
         ->rawColumns(['action','usedStatus'])
         ->make(true);
 
+    }
+
+    public function like(Request $req)      
+    {
+        $pr = ProposalLiked::where('user_id',Auth::user()->id)->where("proposal_id",$req->proposal_id)->exists();
+
+        if(!$pr){
+            $like = new ProposalLiked;
+            $like->user_id = Auth::user()->id;
+            $like->proposal_id = $req->proposal_id;
+            $like->save();
+            
+            $prop = Proposal::find($req->proposal_id);
+            return $this->setResponse($prop);
+        }
+
+        return false;
+    }
+
+    public function unlike(Request $req)      
+    {
+        $prop = ProposalLiked::where('user_id',Auth::user()->id)->where("proposal_id",$req->proposal_id);
+        $pr = $prop->exists();
+
+        if($pr){
+            $prop = $prop->first();
+            $prop->delete();
+            
+            $prop = Proposal::find($req->proposal_id);
+            return $this->setResponse($prop);
+        }
+
+        return false;
     }
 }
