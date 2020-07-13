@@ -9,9 +9,9 @@
                     <div class="col-lg-8" style="padding-bottom: 60px;">
                         <div class="single-page-post">
                             @if(!empty($pen->canvas))
-                            <img class="img-fluid" src="{{asset("$pen->canvas")}}" onclick="window.open('{{ asset($pen->canvas) }}')" alt="Klik untuk lihat detail" style="width:60%;max-height:487px;margin-left:25%;border: 1px solid #c9c9c9;">
+                            <img class="img-fluid" src="{{asset("$pen->canvas")}}" onclick="window.open('{{ asset($pen->canvas) }}')" alt="Klik untuk lihat detail" style="width:60%;max-height:487px;margin-left:25%;border: 1px solid #c9c9c9;cursor:zoom-in;">
                             @else
-                            <img class="img-fluid" src="{{asset("$pen->banner")}}" onclick="window.open('{{ asset($pen->banner) }}')" alt="Klik untuk lihat detail" style="width:60%;max-height:487px;margin-left:25%;border: 1px solid #c9c9c9;">
+                            <img class="img-fluid" src="{{asset("$pen->banner")}}" onclick="window.open('{{ asset($pen->banner) }}')" alt="Klik untuk lihat detail" style="width:60%;max-height:487px;margin-left:25%;border: 1px solid #c9c9c9;cursor:zoom-in;">
                             @endif
                             <div class="top-wrapper ">
                                 <div class="row d-flex justify-content-between">
