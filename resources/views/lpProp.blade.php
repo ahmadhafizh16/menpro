@@ -250,7 +250,7 @@
                 jurusan : function(){
                     this.reloc();
                 },
-                like : function(){
+                likeds : function(){
                     this.reloc();
                 },
                 advS : function(){
