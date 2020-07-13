@@ -63,7 +63,7 @@
                 
               <div class="form-group">
                 <label>Order By Like</label>
-                <select class="error form-control" v-model="like" placeholder="Jenis">
+                <select class="error form-control" v-model="likeds" placeholder="Jenis">
                   <option value="">Default</option>
                   <option value="mostliked=desc">Dari Paling Tinggi</option>
                   <option value="mostliked=asc">Dari Paling Rendah</option>
