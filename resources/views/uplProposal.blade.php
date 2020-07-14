@@ -221,7 +221,7 @@
 							<div :class="Boolean(errors.pendapatan)? 'form-group has-error' : 'form-group'">
 								<label>Sumber Pendapatan</label>
 								{{-- <input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Nama Jurusan"> --}}
-								<textarea id="texta6" class="texta" v-model="pendapatan">@{{ pendapatan }}</textarea>
+								<textarea id="texta7" class="texta" v-model="pendapatan">@{{ pendapatan }}</textarea>
 								<span v-if="Boolean(errors.pendapatan)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.pendapatan">@{{ item }}</li>
@@ -232,7 +232,7 @@
 							<div :class="Boolean(errors.aktivitas_kunci)? 'form-group has-error' : 'form-group'">
 								<label>Aktivitas Kunci</label>
 								{{-- <input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Nama Jurusan"> --}}
-								<textarea id="texta7" class="texta" v-model="aktivitas_kunci">@{{ aktivitas_kunci }}</textarea>
+								<textarea id="texta8" class="texta" v-model="aktivitas_kunci">@{{ aktivitas_kunci }}</textarea>
 								<span v-if="Boolean(errors.aktivitas_kunci)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.aktivitas_kunci">@{{ item }}</li>
@@ -243,7 +243,7 @@
 							<div :class="Boolean(errors.sumberdaya)? 'form-group has-error' : 'form-group'">
 								<label>Sumber Daya Utama</label>
 								{{-- <input type="text"  class="error form-control" id="exampleInputEmail1" v-model="domain" placeholder="Nama Jurusan"> --}}
-								<textarea id="texta8" class="texta" v-model="sumberdaya">@{{ sumberdaya }}</textarea>
+								<textarea id="texta9" class="texta" v-model="sumberdaya">@{{ sumberdaya }}</textarea>
 								<span v-if="Boolean(errors.sumberdaya)"class="help-block">
 									<ul>
 										<li v-for="(item,index) in errors.sumberdaya">@{{ item }}</li>
@@ -425,10 +425,10 @@ var app = new Vue({
 			this.jalur = $("#texta3").summernote("code")
 			this.hubungan_pel = $("#texta4").summernote("code")
 			this.mitra_kunci = $("#texta5").summernote("code")
-			this.struktur_pembiayaan = $("#texta5").summernote("code")
-			this.pendapatan = $("#texta6").summernote("code")
-			this.aktivitas_kunci = $("#texta7").summernote("code")
-			this.sumberdaya = $("#texta8").summernote("code")
+			this.struktur_pembiayaan = $("#texta6").summernote("code")
+			this.pendapatan = $("#texta7").summernote("code")
+			this.aktivitas_kunci = $("#texta8").summernote("code")
+			this.sumberdaya = $("#texta9").summernote("code")
 
 			axios.post('{{ url("editProposal") }}',{
 				id : this.dtId,
@@ -498,10 +498,10 @@ var app = new Vue({
 			this.jalur = $("#texta3").summernote("code")
 			this.hubungan_pel = $("#texta4").summernote("code")
 			this.mitra_kunci = $("#texta5").summernote("code")
-			this.struktur_pembiayaan = $("#texta5").summernote("code")
-			this.pendapatan = $("#texta6").summernote("code")
-			this.aktivitas_kunci = $("#texta7").summernote("code")
-			this.sumberdaya = $("#texta8").summernote("code")
+			this.struktur_pembiayaan = $("#texta6").summernote("code")
+			this.pendapatan = $("#texta7").summernote("code")
+			this.aktivitas_kunci = $("#texta8").summernote("code")
+			this.sumberdaya = $("#texta9").summernote("code")
 
 			axios.post('{{ url("addProposal") }}',{
 				judul : this.judul,
