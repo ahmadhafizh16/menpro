@@ -335,7 +335,7 @@ class HomeController extends Controller
         $inp->segmentasi = $req->segmentasi;
         $inp->jalur = $req->jalur;
         $inp->hubungan_pel = $req->hubungan_pel;
-        $inp->mitra_kunci = $req->proposisi;
+        $inp->mitra_kunci = $req->mitra_kunci;
         $inp->struktur_pembiayaan = $req->struktur_pembiayaan;
         $inp->pendapatan = $req->pendapatan;
         $inp->aktivitas_kunci = $req->aktivitas_kunci;
@@ -376,7 +376,7 @@ class HomeController extends Controller
         $inp->segmentasi = $req->segmentasi;
         $inp->jalur = $req->jalur;
         $inp->hubungan_pel = $req->hubungan_pel;
-        $inp->mitra_kunci = $req->proposisi;
+        $inp->mitra_kunci = $req->mitra_kunci;
         $inp->struktur_pembiayaan = $req->struktur_pembiayaan;
         $inp->pendapatan = $req->pendapatan;
         $inp->aktivitas_kunci = $req->aktivitas_kunci;
