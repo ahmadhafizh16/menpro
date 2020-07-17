@@ -34,6 +34,11 @@ class Proposal extends Model
         return $this->hasOne("App\Kelompok","id_proposal");
     }
 
+    public function jurusan()
+    {
+        return $this->hasOne("App\Jurusan","id_jurusan");
+    }
+
     public function history()
     {
         return $this->hasMany("App\ProposalHistory","id_proposal");
