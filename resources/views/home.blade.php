@@ -55,8 +55,8 @@
         <span class="info-box-icon bg-yellow"><i class="fa fa-check-square-o"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">Laporan Akhir</span>
-          <span class="info-box-number">10<small></small></span>
+          <span class="info-box-text">Jumlah Mahasiswa</span>
+          <span class="info-box-number">30<small></small></span>
         </div>
         <!-- /.info-box-content -->
       </div>

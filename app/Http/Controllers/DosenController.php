@@ -18,7 +18,7 @@ class DosenController extends Controller
 {
     public function index()
     {
-        return view("koordb");
+        return view("home");
     }
 
     public function dataKelompok()
