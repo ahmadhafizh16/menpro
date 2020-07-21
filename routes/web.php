@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/jurusan', 'HomeController@jurusan')->name('manage_jurusan');
         Route::get('/setKelas', 'HomeController@setKelas')->name('setKelas');
         Route::get('/setDosen', 'HomeController@setDosen')->name('setDosen');
+        Route::get('/setUser', 'HomeController@setUser')->name('setUser');
         Route::get('/setKoor', 'HomeController@setKoor');
         Route::get('/tahunajaran', 'HomeController@tahunAjaran')->name('tahunajaran');
         
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::post("addTAjaran","AdminController@addTAjaran");
         Route::post("addKelas","AdminController@addKelas");
         Route::post("addDosen","AdminController@addDosen");
+        Route::post("addUser","AdminController@addUser");
         Route::post("addKoor","AdminController@addKoor");
         
         #ROUTE DATAGEN
@@ -52,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get("tajaranData","AdminController@tajaranData");
         Route::get("kelasData","AdminController@kelasData");
         Route::get("dosenData","AdminController@dosenData");
+        Route::get("userData","AdminController@userData");
         Route::get("koorData","AdminController@koorData");
         
         #ROUTE EDIT
@@ -59,6 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::post("editTAjaran","AdminController@editTAjaran");
         Route::post("editKelas","AdminController@editKelas");
         Route::post("editDosen","AdminController@editDosen");
+        Route::post("editUser","AdminController@editUser");
         Route::post("editKoor","AdminController@editKoor");
         Route::post("editKoorText","AdminController@editKoorText");
         
@@ -67,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::post("deleteTAjaran","AdminController@deleteTAjaran");
         Route::post("deleteKelas","AdminController@deleteKelas");
         Route::post("deleteDosen","AdminController@deleteDosen");
+        Route::post("deleteUser","AdminController@deleteUser");
         Route::post("deleteKoor","AdminController@deleteKoor");
         
     });

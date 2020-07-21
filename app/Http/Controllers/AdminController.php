@@ -347,6 +347,88 @@ class AdminController extends Controller
                             ->make(true);
     }
 
+    public function addUser(Request $req)
+    {
+        $validatedData = $req->validate([
+            'nama' => 'required',
+            'nid' => 'required|numeric',
+            'email' => 'required|email|unique:users',
+            'username' => 'required|unique:users',
+            'password' => 'required',
+            'role' => 'required',
+        ]);
+
+        $inp = new User();
+        $inp->nama = $req->nama;
+        $inp->nomor = $req->nid;
+        $inp->email = $req->email;
+        $inp->username = $req->username;
+        $inp->password = bcrypt($req->password);
+        $inp->role = $req->role;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function editUser(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required',
+            'nid' => 'required|numeric',
+            'email' => 'required|email',
+            'username' => 'required',
+            'role' => 'required',
+        ]);
+
+        $inp = User::find($req->id);
+        $inp->nama = $req->nama;
+        $inp->nomor = $req->nid;
+        $inp->email = $req->email;
+        $inp->username = $req->username;
+        if($req->has("password")){
+            $inp->password = bcrypt($req->password);
+        }
+        $inp->role = $req->role;
+        $inp->save();
+
+        return $this->setResponse($inp);
+    }
+
+    public function deleteUser(Request $req)
+    {
+        $validatedData = $req->validate([
+            'id' => 'required'
+        ]);
+        // dd($req->all());
+        $j = User::find($req->id);
+        $j->delete();
+
+        return $this->setResponse($j);
+    }
+
+    public function userData()
+    {
+        $dos = User::where("role","=","4")->orderBy("nama","asc")->get();
+
+        return DataTables::of($dos)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+
+                                $btn = '<a onclick="editDt('.$row->id.')" class="edit btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>';
+
+                                $btn .= '&emsp;<a onclick="deleteDt('.$row->id.')" class="edit btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>';
+          
+                                 return $btn;
+                            })
+                            ->addColumn('jurusan', function($row){
+                                 $jur = substr($row->nomor,0,2);
+                                 $j = Jurusan::find($jur);
+                                 return is_null($j)? '' : $j->nama;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+    }
+
     /**
      * 
      *  KOOR

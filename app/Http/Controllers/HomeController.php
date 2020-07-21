@@ -136,6 +136,11 @@ class HomeController extends Controller
         return view('setDosen');
     }
 
+    public function setUser()
+    {
+        return view('setUser');
+    }
+
     public function setKoor()
     {
         $deskripsi = KoorText::find(1)->content;
