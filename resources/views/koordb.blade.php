@@ -162,14 +162,25 @@ Highcharts.chart('containerz', {
     plotOptions: {
         column: {
             pointPadding: 0.2,
-            borderWidth: 0
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                crop: false,
+                overflow: 'none'
+            } 
         }
     },
     series: [{
-        name: 'Jumlah Proposal',
+        name: 'Total Proposal Masuk',
         data: [{{ $val }}]
-
-    }]
+    },
+    @foreach($dB as $kk => $vv)
+    {
+        name : '{{ $kk }}',
+        data : [{{ implode(",",$vv) }}]
+    },
+    @endforeach
+    ]
 });
 </script>
 @endsection

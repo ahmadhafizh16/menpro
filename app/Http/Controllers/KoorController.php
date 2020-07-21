@@ -30,13 +30,26 @@ class KoorController extends Controller
         $str1 = "";
         $dt1 = [];
         $dt2 = [];
+        $dB['elektronika'] = []; 
+        $dB['life style'] = []; 
+        $dB['informatika'] = []; 
+        $dB['kuliner'] = []; 
+        $dB['agrobisnis'] = []; 
         foreach($propData as $k => $v){
             $dt1[] = Jurusan::find($v->id_jurusan)->nama;
             $dt2[] = $v->counted;
+            foreach($dB as $kk => $vv){
+                $bid = Proposal::select(DB::raw("bidang,count(id_jurusan) as counted2"))->where("bidang",$kk)->where("id_jurusan",$v->id_jurusan)->groupBy("bidang")->first();
+                if(is_null($bid)){
+                    $dB[$kk][] = 0;
+                }else{
+                   $dB[$kk][] = $bid->counted2;
+                }
+            }
         }
         $cat .=  implode("','",$dt1)."'";
         $val .=  implode(",",$dt2);
-        return view("koordb",compact("dosen","kelompok","prop","kelas","cat","val"));
+        return view("koordb",compact("dosen","kelompok","prop","kelas","cat","val","dB"));
     }
 
     public function createPengumuman()
